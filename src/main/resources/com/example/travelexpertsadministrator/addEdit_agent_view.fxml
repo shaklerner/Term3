@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.travelexpertsadministrator.AddEditAgentController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <!-- First Name -->
+    <Label layoutX="50" layoutY="50" text="First Name:"/>
+    <TextField fx:id="tfFirstName" layoutX="150" layoutY="45" promptText="First Name" />
+
+    <!-- Middle Initial -->
+    <Label layoutX="50" layoutY="100" text="Middle Initial:"/>
+    <TextField fx:id="tfMiddleInit" layoutX="150" layoutY="95" promptText="Middle Initial" />
+
+    <!-- Last Name -->
+    <Label layoutX="50" layoutY="150" text="Last Name:"/>
+    <TextField fx:id="tfLastName" layoutX="150" layoutY="145" promptText="Last Name" />
+
+    <!-- Phone -->
+    <Label layoutX="50" layoutY="200" text="Phone:"/>
+    <TextField fx:id="tfPhone" layoutX="150" layoutY="195" promptText="Phone" />
+
+    <!-- Email -->
+    <Label layoutX="50" layoutY="250" text="Email:"/>
+    <TextField fx:id="tfEmail" layoutX="150" layoutY="245" promptText="Email" />
+
+    <!-- Position -->
+    <Label layoutX="50" layoutY="300" text="Position:"/>
+    <TextField fx:id="tfPosition" layoutX="150" layoutY="295" promptText="Position" />
+
+    <!-- Agency ID -->
+    <Label layoutX="50" layoutY="350" text="Agency ID:"/>
+    <ComboBox fx:id="cbAgencyId" layoutX="150" layoutY="345" promptText="Agency ID" />
+
+    <!-- Add Button -->
+    <Button fx:id="btnConfirmAdd" layoutX="420" layoutY="345" onAction="#btnAddAgentClicked" text="Add" />
+
+    <!-- Cancel Button -->
+    <Button fx:id="btnCancelAdd" layoutX="500" layoutY="345" onAction="#btnCancelClicked" text="Cancel" />
+
+</AnchorPane>

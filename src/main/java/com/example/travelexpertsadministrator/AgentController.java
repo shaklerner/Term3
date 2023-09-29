@@ -15,11 +15,13 @@ import java.sql.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class AgentController {
 
@@ -98,6 +100,51 @@ public class AgentController {
 
 
     }
+    @FXML
+    private void handleAddButtonClick() {
+        showModal(null);
+    }
+    @FXML
+    private void handleEditButtonClick() {
+        Agent selectedAgent = tvAgents.getSelectionModel().getSelectedItem();
+        if (selectedAgent != null) {
+            showModal(selectedAgent);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Selection Required");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select an agent from the table to edit.");
+            alert.showAndWait();
+        }
+    }
+    public void refreshTable() {
+        getAgents();
+    }
+    private void showModal(Agent agent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("addEdit_agent_view.fxml"));
+            Parent root = loader.load();
+
+            AddEditAgentController addEditAgentController = loader.getController();
+            addEditAgentController.setMainController(this);
+
+            if (agent == null) {
+                addEditAgentController.setModeAndData(AddEditAgentController.Mode.ADD, null);
+            } else {
+                addEditAgentController.setModeAndData(AddEditAgentController.Mode.EDIT, agent);
+            }
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle(agent == null ? "Add New Agent" : "Edit Agent");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+            refreshTable(); // Refresh the table data after subview closes
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void getAgents() {
         data.clear();
@@ -121,12 +168,12 @@ public class AgentController {
             while(rs.next())
             {
                 data.add(new Agent
-                                (rs.getInt(1),rs.getString(2),
+                        (rs.getInt(1),rs.getString(2),
                                 rs.getString(3),rs.getString(4),
                                 rs.getString(5),rs.getString(6),
                                 rs.getString(7),rs.getInt(8)
-                                )
-                        );
+                        )
+                );
             }
 
             conn.close();

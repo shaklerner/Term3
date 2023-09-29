@@ -83,7 +83,7 @@
    <right>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="btnAdd" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" rotate="90.0" text="+" textAlignment="CENTER">
+            <Button fx:id="btnAdd" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" rotate="90.0" text="+" textAlignment="CENTER" onAction="#handleAddButtonClick">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
@@ -94,7 +94,7 @@
                   <Insets bottom="60.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="btnEdit" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" rotate="90.0" text="✎" textAlignment="CENTER">
+            <Button fx:id="btnEdit" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" rotate="90.0" text="✎" textAlignment="CENTER" onAction="#handleEditButtonClick">
                <font>
                   <Font size="20.0" />
                </font>
