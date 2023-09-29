@@ -10,7 +10,7 @@ import java.io.IOException;
 public class TravelExpertsManager extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(TravelExpertsManager.class.getResource("agent-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(TravelExpertsManager.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Travel Experts Manager");
 

@@ -1,5 +1,5 @@
 /**
- * Sample Skeleton for 'agent-view.fxml' Controller Class
+ * Sample Skeleton for 'main-view.fxml' Controller Class
  */
 
 package com.example.travelexpertsadministrator;
@@ -11,7 +11,12 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.sql.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,6 +25,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -67,23 +73,72 @@ public class AgentController {
     @FXML // fx:id="tvAgents"
     private TableView<Agent> tvAgents; // Value injected by FXMLLoader
 
+
+    //---BOOKINGS TABLE
+    @FXML // fx:id="bkDate"
+    private TableColumn<Booking, String> bkDate; // Value injected by FXMLLoader
+
+    @FXML // fx:id="bkId"
+    private TableColumn<Booking, Integer> bkId; // Value injected by FXMLLoader
+
+    @FXML // fx:id="bkNo"
+    private TableColumn<Booking, Integer> bkNo; // Value injected by FXMLLoader
+
+    @FXML // fx:id="custId"
+    private TableColumn<Booking, Integer> custId; // Value injected by FXMLLoader
+
+    @FXML // fx:id="pkgId"
+    private TableColumn<Booking, Integer> pkgId; // Value injected by FXMLLoader
+
+    @FXML // fx:id="tbBookings"
+    private Tab tbBookings; // Value injected by FXMLLoader
+
+    @FXML // fx:id="travelNo"
+    private TableColumn<Booking, Integer> travelNo; // Value injected by FXMLLoader
+
+    @FXML // fx:id="trptypId"
+    private TableColumn<Booking, String> trptypId; // Value injected by FXMLLoader
+
+    @FXML // fx:id="tvBookings"
+    private TableView<Booking> tvBookings; // Value injected by FXMLLoader
+
+    @FXML
+    private Label lbConnection; // Reference to the ToggleButton
+
+
     private String mode; // add|edit
 
+    private String sqlString="";
+    private final ScheduledExecutorService connectionCheckScheduler = Executors.newSingleThreadScheduledExecutor();
+
+
     ObservableList<Agent> data= FXCollections.observableArrayList();
+
+    ObservableList<Booking> dataBooking = FXCollections.observableArrayList();
+
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
-        assert agcId != null : "fx:id=\"agcId\" was not injected: check your FXML file 'agent-view.fxml'.";
-        assert agtEmail != null : "fx:id=\"agtEmail\" was not injected: check your FXML file 'agent-view.fxml'.";
-        assert agtFName != null : "fx:id=\"agtFName\" was not injected: check your FXML file 'agent-view.fxml'.";
-        assert agtId != null : "fx:id=\"agtId\" was not injected: check your FXML file 'agent-view.fxml'.";
-        assert agtLName != null : "fx:id=\"agtLName\" was not injected: check your FXML file 'agent-view.fxml'.";
-        assert agtMidInit != null : "fx:id=\"agtMidInit\" was not injected: check your FXML file 'agent-view.fxml'.";
-        assert agtPhone != null : "fx:id=\"agtPhone\" was not injected: check your FXML file 'agent-view.fxml'.";
-        assert agtPosition != null : "fx:id=\"agtPosition\" was not injected: check your FXML file 'agent-view.fxml'.";
-        assert tbAbout != null : "fx:id=\"tbAbout\" was not injected: check your FXML file 'agent-view.fxml'.";
-        assert tbAgent != null : "fx:id=\"tbAgent\" was not injected: check your FXML file 'agent-view.fxml'.";
-        assert tpMain != null : "fx:id=\"tpMain\" was not injected: check your FXML file 'agent-view.fxml'.";
-        assert tvAgents != null : "fx:id=\"tvAgents\" was not injected: check your FXML file 'agent-view.fxml'.";
+
+        // Schedule the connection check task to run every 5 seconds (adjust as needed)
+        connectionCheckScheduler.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                updateConnectionStatus();
+            }
+        }, 0, 5, TimeUnit.SECONDS);
+
+        assert agcId != null : "fx:id=\"agcId\" was not injected: check your FXML file 'main-view.fxml'.";
+        assert agtEmail != null : "fx:id=\"agtEmail\" was not injected: check your FXML file 'main-view.fxml'.";
+        assert agtFName != null : "fx:id=\"agtFName\" was not injected: check your FXML file 'main-view.fxml'.";
+        assert agtId != null : "fx:id=\"agtId\" was not injected: check your FXML file 'main-view.fxml'.";
+        assert agtLName != null : "fx:id=\"agtLName\" was not injected: check your FXML file 'main-view.fxml'.";
+        assert agtMidInit != null : "fx:id=\"agtMidInit\" was not injected: check your FXML file 'main-view.fxml'.";
+        assert agtPhone != null : "fx:id=\"agtPhone\" was not injected: check your FXML file 'main-view.fxml'.";
+        assert agtPosition != null : "fx:id=\"agtPosition\" was not injected: check your FXML file 'main-view.fxml'.";
+        assert tbAbout != null : "fx:id=\"tbAbout\" was not injected: check your FXML file 'main-view.fxml'.";
+        assert tbAgent != null : "fx:id=\"tbAgent\" was not injected: check your FXML file 'main-view.fxml'.";
+        assert tpMain != null : "fx:id=\"tpMain\" was not injected: check your FXML file 'main-view.fxml'.";
+        assert tvAgents != null : "fx:id=\"tvAgents\" was not injected: check your FXML file 'main-view.fxml'.";
 
         agtId.setCellValueFactory(new PropertyValueFactory<Agent,Integer>("agentId"));
         agtFName.setCellValueFactory(new PropertyValueFactory<Agent,String>("agtFName"));
@@ -94,7 +149,17 @@ public class AgentController {
         agtPosition.setCellValueFactory(new PropertyValueFactory<Agent,String>("agtPosition"));
         agcId.setCellValueFactory(new PropertyValueFactory<Agent,Integer>("agencyId"));
 
+        bkDate.setCellValueFactory(new PropertyValueFactory<Booking,String>("bookingDate"));
+        bkId.setCellValueFactory(new PropertyValueFactory<Booking,Integer>("bookingId"));
+        bkNo.setCellValueFactory(new PropertyValueFactory<Booking, Integer>("bookingNo"));
+        travelNo.setCellValueFactory(new PropertyValueFactory<Booking,Integer>("travelerCounter"));
+        custId.setCellValueFactory(new PropertyValueFactory<Booking,Integer>("customerId"));
+        trptypId.setCellValueFactory(new PropertyValueFactory<Booking,String>("tripTypeId"));
+        pkgId.setCellValueFactory(new PropertyValueFactory<Booking,Integer>("PackageId"));
+
+
         tvAgents.setItems(data);
+        tvBookings.setItems(dataBooking);
 
         getAgents();
 
@@ -146,48 +211,138 @@ public class AgentController {
         }
     }
 
+
     private void getAgents() {
-        data.clear();
 
-        String url="";
-        String user="";
-        String pass="";
+        setSQL("SELECT * FROM agents");
+        tpMain.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+            @Override
+            public void changed(ObservableValue<? extends Tab> observableValue, Tab tab, Tab t1) {
 
-        try {
-            FileInputStream fis=new FileInputStream("connection.properties");
-            Properties p=new Properties();
-            p.load(fis);
-            url=(String) p.get("url");
-            user=(String) p.get("user");
-            pass=(String) p.get("password");
-            Connection conn=DriverManager.getConnection(url,user,pass);
-            Statement stmt= conn.createStatement();
-            ResultSet rs=stmt.executeQuery("Select * from agents");
-            ResultSetMetaData rsmd=rs.getMetaData();
 
-            while(rs.next())
-            {
-                data.add(new Agent
-                        (rs.getInt(1),rs.getString(2),
-                                rs.getString(3),rs.getString(4),
-                                rs.getString(5),rs.getString(6),
-                                rs.getString(7),rs.getInt(8)
-                        )
-                );
+                if (t1==tbAgent) {
+
+                    setSQL("Select * from agents");
+                } else if (t1==tbBookings) {
+
+                    setSQL("Select * from bookings");
+                }
+
+                data.clear();
+                dataBooking.clear();
+
+                String url = "";
+                String user = "";
+                String pass = "";
+
+                try {
+                    FileInputStream fis = new FileInputStream("connection.properties");
+                    Properties p = new Properties();
+                    p.load(fis);
+                    url = (String) p.get("url");
+                    user = (String) p.get("user");
+                    pass = (String) p.get("password");
+                    Connection conn = DriverManager.getConnection(url, user, pass);
+                    Statement stmt = conn.createStatement();
+
+                    ResultSet rs = stmt.executeQuery(getSQL());
+                    ResultSetMetaData rsmd = rs.getMetaData();
+
+
+                    while (rs.next()) {
+
+                        if (t1==tbAgent) {
+                            data.add(new Agent
+                                    (rs.getInt(1), rs.getString(2),
+                                            rs.getString(3), rs.getString(4),
+                                            rs.getString(5), rs.getString(6),
+                                            rs.getString(7), rs.getInt(8)
+                                    )
+                            );
+                        } else if (t1==tbBookings) {
+                            dataBooking.add(new Booking
+                                    (rs.getInt(1), rs.getString(2),
+                                            rs.getString(3), rs.getInt(4),
+                                            rs.getInt(5), rs.getString(6),
+                                            rs.getInt(7)
+                                    )
+                            );
+                        }
+
+
+                    }
+
+                    conn.close();
+
+
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+
             }
-
-            conn.close();
-
-
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        });
 
 
+
+
+    }//getAgents
+
+    private String getSQL () {
+        return this.sqlString;
     }
 
-}
+    private void setSQL (String s){
+        this.sqlString = s;
+    }
+    // Method to check the database connection status
+    private boolean isDatabaseConnected() {
+        String url = "";
+        String user = "";
+        String pass = "";
+
+        try (FileInputStream fis = new FileInputStream("connection.properties")) {
+            Properties p = new Properties();
+            p.load(fis);
+            url = p.getProperty("url");
+            user = p.getProperty("user");
+            pass = p.getProperty("password");
+
+            // Attempt to establish a database connection
+            try (Connection conn = DriverManager.getConnection(url, user, pass)) {
+                return true;  // Connection successful
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return false;  // Connection failed
+    }
+
+    // Method to update the connection status property
+    private void updateConnectionStatus() {
+        boolean isConnected = isDatabaseConnected();
+        System.out.println("Connection check...");
+        if (isConnected) {
+            System.out.println("[x] Connected");
+
+            lbConnection.setTextFill(Color.GREEN);
+        } else {
+            lbConnection.setTextFill(Color.RED);
+        }
+    }
+
+    // Cleanup method to stop the connection check scheduler when closing the application
+    public void stop() {
+        connectionCheckScheduler.shutdownNow();
+    }
+
+
+
+}//Class
