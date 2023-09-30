@@ -61,19 +61,6 @@ public class AgentController {
     @FXML // fx:id="agtPosition"
     private TableColumn<Agent, String> agtPosition; // Value injected by FXMLLoader
 
-    @FXML // fx:id="tbAbout"
-    private Tab tbAbout; // Value injected by FXMLLoader
-
-    @FXML // fx:id="tbAgent"
-    private Tab tbAgent; // Value injected by FXMLLoader
-
-    @FXML // fx:id="tpMain"
-    private TabPane tpMain; // Value injected by FXMLLoader
-
-    @FXML // fx:id="tvAgents"
-    private TableView<Agent> tvAgents; // Value injected by FXMLLoader
-
-
     //---BOOKINGS TABLE
     @FXML // fx:id="bkDate"
     private TableColumn<Booking, String> bkDate; // Value injected by FXMLLoader
@@ -90,17 +77,12 @@ public class AgentController {
     @FXML // fx:id="pkgId"
     private TableColumn<Booking, Integer> pkgId; // Value injected by FXMLLoader
 
-    @FXML // fx:id="tbBookings"
-    private Tab tbBookings; // Value injected by FXMLLoader
-
     @FXML // fx:id="travelNo"
     private TableColumn<Booking, Integer> travelNo; // Value injected by FXMLLoader
 
     @FXML // fx:id="trptypId"
     private TableColumn<Booking, String> trptypId; // Value injected by FXMLLoader
 
-    @FXML // fx:id="tvBookings"
-    private TableView<Booking> tvBookings; // Value injected by FXMLLoader
 
     //---CUSTOMERS TABLE
     @FXML
@@ -138,10 +120,53 @@ public class AgentController {
 
     @FXML
     private TableColumn<Customer, String> custProv;
+    @FXML
+    private TableColumn<Package, Double> pkgAgncCom;
 
+    @FXML
+    private TableColumn<Package, Double> pkgBasePrice;
+
+    @FXML
+    private TableColumn<Package, String> pkgPkgDesc;
+
+    @FXML
+    private TableColumn<Package, String> pkgPkgEndDate;
+
+    @FXML
+    private TableColumn<Package, Integer> pkgPkgId;
+
+    @FXML
+    private TableColumn<Package, String> pkgPkgName;
+
+    @FXML
+    private TableColumn<Package, String> pkgPkgStartDate;
+
+    @FXML
+    private Tab tbPackages;
+
+    @FXML // fx:id="tbBookings"
+    private Tab tbBookings; // Value injected by FXMLLoader
+
+    @FXML // fx:id="tbAbout"
+    private Tab tbAbout; // Value injected by FXMLLoader
+
+    @FXML // fx:id="tbAgent"
+    private Tab tbAgent; // Value injected by FXMLLoader
 
     @FXML
     private Tab tbCustomers;
+
+    @FXML // fx:id="tpMain"
+    private TabPane tpMain; // Value injected by FXMLLoader
+
+    @FXML
+    private TableView<Package> tvPackages;
+
+    @FXML // fx:id="tvAgents"
+    private TableView<Agent> tvAgents; // Value injected by FXMLLoader
+
+    @FXML // fx:id="tvBookings"
+    private TableView<Booking> tvBookings; // Value injected by FXMLLoader
 
     @FXML
     private TableView<Customer> tvCustomers;
@@ -159,9 +184,9 @@ public class AgentController {
 
 
     ObservableList<Agent> data= FXCollections.observableArrayList();
-
     ObservableList<Booking> dataBooking = FXCollections.observableArrayList();
     ObservableList<Customer> dataCustomer = FXCollections.observableArrayList();
+    ObservableList<Package> dataPackage = FXCollections.observableArrayList();
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
@@ -216,11 +241,20 @@ public class AgentController {
         custBPhone.setCellValueFactory(new PropertyValueFactory<Customer,String>("CustBusPhone"));
         custEmail.setCellValueFactory(new PropertyValueFactory<Customer,String>("CustEmail"));
         custAgtId.setCellValueFactory(new PropertyValueFactory<Customer,Integer>("AgentId"));
+//PACKAGES
+        pkgPkgId.setCellValueFactory(new PropertyValueFactory<Package,Integer>("PackageId"));
+        pkgPkgName.setCellValueFactory(new PropertyValueFactory<Package,String>("PkgName"));
+        pkgPkgStartDate.setCellValueFactory(new PropertyValueFactory<Package,String>("PkgStartDate"));
+        pkgPkgEndDate.setCellValueFactory(new PropertyValueFactory<Package,String>("PkgEndDate"));
+        pkgPkgDesc.setCellValueFactory(new PropertyValueFactory<Package,String>("PkgDesc"));
+        pkgBasePrice.setCellValueFactory(new PropertyValueFactory<Package,Double>("PkgBasePrice"));
+        pkgAgncCom.setCellValueFactory(new PropertyValueFactory<Package,Double>("PkgAgencyCommission"));
 
 
         tvAgents.setItems(data);
         tvBookings.setItems(dataBooking);
         tvCustomers.setItems(dataCustomer);
+        tvPackages.setItems(dataPackage);
 
         getAgents();
 
@@ -289,12 +323,15 @@ public class AgentController {
                     setSQL("Select * from bookings");
                 } else if (t1==tbCustomers){
                     setSQL("Select * from Customers");
+                } else if (t1==tbPackages){
+                    setSQL("Select * from Packages");
                 }
 
 
                 data.clear();
                 dataBooking.clear();
                 dataCustomer.clear();
+                dataPackage.clear();
 
                 String url = "";
                 String user = "";
@@ -340,6 +377,14 @@ public class AgentController {
                                             rs.getString(7),rs.getString(8),
                                             rs.getString(9),rs.getString(10),
                                             rs.getString(11),rs.getInt(12)
+                                    )
+                            );
+                        } else if (t1==tbPackages) {
+                            dataPackage.add(new Package
+                                    (rs.getInt(1), rs.getString(2),
+                                            rs.getString(3), rs.getString(4),
+                                            rs.getString(5), rs.getDouble(6),
+                                            rs.getDouble(7)
                                     )
                             );
                         }
