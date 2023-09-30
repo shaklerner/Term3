@@ -80,6 +80,33 @@
                         </AnchorPane>
                     </content>
                 </Tab>
+            <Tab fx:id="tbCustomers" closable="false" text="Customers">
+               <content>
+                  <AnchorPane id="apHome" minHeight="0.0" minWidth="0.0" prefHeight="704.0" prefWidth="977.0">
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                     <children>
+                        <TableView fx:id="tvCustomers" layoutX="13.0" layoutY="37.0" prefHeight="560.0" prefWidth="937.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
+                           <columns>
+                              <TableColumn fx:id="customerId" prefWidth="78.0" text="Customer Id" />
+                              <TableColumn fx:id="custFName" prefWidth="131.0" text="First Name" />
+                              <TableColumn fx:id="custLName" prefWidth="134.0" text="Last Name" />
+                              <TableColumn fx:id="custAddress" prefWidth="251.0" text="Address" />
+                              <TableColumn fx:id="custCity" prefWidth="94.0" text="City" />
+                              <TableColumn fx:id="custProv" prefWidth="99.0" text="Province" />
+                              <TableColumn fx:id="custPost" prefWidth="151.0" text="Postal Code" />
+                              <TableColumn fx:id="custCountry" prefWidth="84.0" text="Country" />
+                              <TableColumn fx:id="custHPhone" prefWidth="84.0" text="Home Phone" />
+                              <TableColumn fx:id="custBPhone" prefWidth="84.0" text="Business Phone" />
+                              <TableColumn fx:id="custEmail" prefWidth="84.0" text="Email" />
+                              <TableColumn fx:id="custAgtId" prefWidth="84.0" text="Agent Id" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
             </tabs>
         </TabPane>
     </center>
@@ -103,7 +130,7 @@
     <right>
         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="btnAdd" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" rotate="90.0" text="+" textAlignment="CENTER" onAction="#handleAddButtonClick">
+                <Button fx:id="btnAdd" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleAddButtonClick" prefHeight="50.0" prefWidth="50.0" rotate="90.0" text="+" textAlignment="CENTER">
                     <font>
                         <Font name="System Bold" size="24.0" />
                     </font>
@@ -114,7 +141,7 @@
                         <Insets bottom="60.0" top="10.0" />
                     </VBox.margin>
                 </Button>
-                <Button fx:id="btnEdit" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" rotate="90.0" text="✎" textAlignment="CENTER" onAction="#handleEditButtonClick">
+                <Button fx:id="btnEdit" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleEditButtonClick" prefHeight="50.0" prefWidth="50.0" rotate="90.0" text="✎" textAlignment="CENTER">
                     <font>
                         <Font size="20.0" />
                     </font>

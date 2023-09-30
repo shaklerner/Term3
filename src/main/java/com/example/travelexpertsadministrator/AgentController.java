@@ -102,6 +102,52 @@ public class AgentController {
     @FXML // fx:id="tvBookings"
     private TableView<Booking> tvBookings; // Value injected by FXMLLoader
 
+    //---CUSTOMERS TABLE
+    @FXML
+    private TableColumn<Customer, String> custAddress;
+
+    @FXML
+    private TableColumn<Customer, Integer> custAgtId;
+
+    @FXML
+    private TableColumn<Customer, String> custBPhone;
+
+    @FXML
+    private TableColumn<Customer, String> custCity;
+
+    @FXML
+    private TableColumn<Customer, String> custCountry;
+
+    @FXML
+    private TableColumn<Customer, String> custEmail;
+
+    @FXML
+    private TableColumn<Customer, String> custFName;
+
+    @FXML
+    private TableColumn<Customer, String> custHPhone;
+
+    @FXML
+    private TableColumn<Customer, Integer> customerId;
+
+    @FXML
+    private TableColumn<Customer, String> custLName;
+
+    @FXML
+    private TableColumn<Customer, String> custPost;
+
+    @FXML
+    private TableColumn<Customer, String> custProv;
+
+
+    @FXML
+    private Tab tbCustomers;
+
+    @FXML
+    private TableView<Customer> tvCustomers;
+
+
+
     @FXML
     private Label lbConnection; // Reference to the ToggleButton
 
@@ -115,6 +161,7 @@ public class AgentController {
     ObservableList<Agent> data= FXCollections.observableArrayList();
 
     ObservableList<Booking> dataBooking = FXCollections.observableArrayList();
+    ObservableList<Customer> dataCustomer = FXCollections.observableArrayList();
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
@@ -139,7 +186,7 @@ public class AgentController {
         assert tbAgent != null : "fx:id=\"tbAgent\" was not injected: check your FXML file 'main-view.fxml'.";
         assert tpMain != null : "fx:id=\"tpMain\" was not injected: check your FXML file 'main-view.fxml'.";
         assert tvAgents != null : "fx:id=\"tvAgents\" was not injected: check your FXML file 'main-view.fxml'.";
-
+//AGENTS
         agtId.setCellValueFactory(new PropertyValueFactory<Agent,Integer>("agentId"));
         agtFName.setCellValueFactory(new PropertyValueFactory<Agent,String>("agtFName"));
         agtMidInit.setCellValueFactory(new PropertyValueFactory<Agent,String>("agtMidInit"));
@@ -148,7 +195,7 @@ public class AgentController {
         agtEmail.setCellValueFactory(new PropertyValueFactory<Agent,String>("agtEmail"));
         agtPosition.setCellValueFactory(new PropertyValueFactory<Agent,String>("agtPosition"));
         agcId.setCellValueFactory(new PropertyValueFactory<Agent,Integer>("agencyId"));
-
+//BOOKINGS
         bkDate.setCellValueFactory(new PropertyValueFactory<Booking,String>("bookingDate"));
         bkId.setCellValueFactory(new PropertyValueFactory<Booking,Integer>("bookingId"));
         bkNo.setCellValueFactory(new PropertyValueFactory<Booking, Integer>("bookingNo"));
@@ -156,10 +203,24 @@ public class AgentController {
         custId.setCellValueFactory(new PropertyValueFactory<Booking,Integer>("customerId"));
         trptypId.setCellValueFactory(new PropertyValueFactory<Booking,String>("tripTypeId"));
         pkgId.setCellValueFactory(new PropertyValueFactory<Booking,Integer>("PackageId"));
+//CUSTOMERS
+        customerId.setCellValueFactory(new PropertyValueFactory<Customer,Integer>("CustomerId"));
+        custFName.setCellValueFactory(new PropertyValueFactory<Customer,String>("CustFName"));
+        custLName.setCellValueFactory(new PropertyValueFactory<Customer,String>("CustLName"));
+        custAddress.setCellValueFactory(new PropertyValueFactory<Customer,String>("CustAddress"));
+        custCity.setCellValueFactory(new PropertyValueFactory<Customer,String>("CustCity"));
+        custProv.setCellValueFactory(new PropertyValueFactory<Customer,String>("CustProv"));
+        custPost.setCellValueFactory(new PropertyValueFactory<Customer,String>("CustPostal"));
+        custCountry.setCellValueFactory(new PropertyValueFactory<Customer,String>("CustCountry"));
+        custHPhone.setCellValueFactory(new PropertyValueFactory<Customer,String>("CustHomePhone"));
+        custBPhone.setCellValueFactory(new PropertyValueFactory<Customer,String>("CustBusPhone"));
+        custEmail.setCellValueFactory(new PropertyValueFactory<Customer,String>("CustEmail"));
+        custAgtId.setCellValueFactory(new PropertyValueFactory<Customer,Integer>("AgentId"));
 
 
         tvAgents.setItems(data);
         tvBookings.setItems(dataBooking);
+        tvCustomers.setItems(dataCustomer);
 
         getAgents();
 
@@ -226,10 +287,14 @@ public class AgentController {
                 } else if (t1==tbBookings) {
 
                     setSQL("Select * from bookings");
+                } else if (t1==tbCustomers){
+                    setSQL("Select * from Customers");
                 }
+
 
                 data.clear();
                 dataBooking.clear();
+                dataCustomer.clear();
 
                 String url = "";
                 String user = "";
@@ -265,6 +330,16 @@ public class AgentController {
                                             rs.getString(3), rs.getInt(4),
                                             rs.getInt(5), rs.getString(6),
                                             rs.getInt(7)
+                                    )
+                            );
+                        } else if (t1==tbCustomers) {
+                            dataCustomer.add(new Customer
+                                    (rs.getInt(1), rs.getString(2),
+                                            rs.getString(3), rs.getString(4),
+                                            rs.getString(5), rs.getString(6),
+                                            rs.getString(7),rs.getString(8),
+                                            rs.getString(9),rs.getString(10),
+                                            rs.getString(11),rs.getInt(12)
                                     )
                             );
                         }
