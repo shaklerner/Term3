@@ -14,7 +14,7 @@ public class AgentDAO {
     // SQL statements
     private static final String INSERT_AGENT_SQL = "INSERT INTO agents (AgtFirstName, AgtMiddleInitial, AgtLastName, AgtBusPhone, AgtEmail, AgtPosition, AgencyId) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_AGENT_SQL = "UPDATE agents SET AgtFirstName=?, AgtMiddleInitial=?, AgtLastName=?, AgtBusPhone=?, AgtEmail=?, AgtPosition=?, AgencyId=? WHERE agentId=?";
-
+    private static final String DELETE_AGENT_SQL = "DELETE FROM agents WHERE AgentId = ?";
     public static boolean insertAgent(Agent agent) {
         try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_AGENT_SQL)) {
@@ -55,6 +55,21 @@ public class AgentDAO {
 
         } catch (SQLException e) {
             // Handle database errors or log them
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public static boolean deleteAgent(Agent agent) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_AGENT_SQL)) {
+
+            preparedStatement.setInt(1, agent.getAgentId());
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }

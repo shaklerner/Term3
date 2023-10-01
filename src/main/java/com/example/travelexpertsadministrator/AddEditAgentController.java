@@ -21,7 +21,7 @@ public class AddEditAgentController {
     private Mode currentMode;
     private Agent currentAgent;
 
-    public void setMainController(AgentController mainController) {
+    public void setMainController(MainController mainController) {
         // Intentionally left empty if not used elsewhere.
     }
 

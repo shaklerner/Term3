@@ -29,7 +29,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class AgentController {
+public class MainController {
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -313,7 +313,7 @@ public class AgentController {
         tvProductsSuppliers.setItems(dataProductSupplier);
         tvPackagesProductsSuppliers.setItems(dataPackageProductSupplier);
 
-        getAgents();
+        LoadData();
 
 
     }
@@ -334,8 +334,26 @@ public class AgentController {
             alert.showAndWait();
         }
     }
+    @FXML
+    private void handleDeleteButtonClick() {
+        Agent selectedAgent = tvAgents.getSelectionModel().getSelectedItem();
+
+        if (selectedAgent == null) {
+            showAlert("Selection Required", "Please select an agent to delete.");
+            return;
+        }
+
+        if (showConfirmation("Delete Confirmation", "Do you really want to delete this agent?")) {
+            if (AgentDAO.deleteAgent(selectedAgent)) {  // assuming deleteAgent returns boolean for success/failure
+                tvAgents.getItems().remove(selectedAgent);
+                showAlert("Success", "Agent deleted successfully.");
+            } else {
+                showAlert("Failure", "Could not delete the agent. Please try again later.");
+            }
+        }
+    }
     public void refreshTable() {
-        getAgents();
+        LoadData();
     }
     private void showModal(Agent agent) {
         try {
@@ -362,9 +380,22 @@ public class AgentController {
             e.printStackTrace();
         }
     }
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING, message, ButtonType.OK);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.showAndWait();
+    }
+
+    private boolean showConfirmation(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.YES, ButtonType.NO);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        return alert.showAndWait().get() == ButtonType.YES;
+    }
 
 
-    private void getAgents() {
+    private void LoadData() {
 
         setSQL("SELECT * FROM agents");
         tpMain.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {

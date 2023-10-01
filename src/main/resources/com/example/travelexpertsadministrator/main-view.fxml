@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.travelexpertsadministrator.AgentController">
+<BorderPane xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.travelexpertsadministrator.MainController">
     <center>
         <TabPane fx:id="tpMain" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="704.0" prefWidth="988.0" side="LEFT" tabClosingPolicy="UNAVAILABLE">
             <tabs>
@@ -231,7 +231,7 @@
                         <Insets bottom="60.0" />
                     </VBox.margin>
                 </Button>
-                <Button fx:id="btnDelete" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" text="Del" textAlignment="CENTER">
+                <Button fx:id="btnDelete" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleDeleteButtonClick" prefHeight="50.0" prefWidth="50.0" text="Del" textAlignment="CENTER">
                     <font>
                         <Font size="16.0" />
                     </font>
