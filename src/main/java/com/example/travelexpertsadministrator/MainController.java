@@ -214,14 +214,9 @@ public class MainController {
     @FXML
     private TableView<Customer> tvCustomers;
 
-
-
     @FXML
     private Label lbConnection; // Reference to the ToggleButton
-
-
     private String mode; // add|edit
-
     private String sqlString="";
     private final ScheduledExecutorService connectionCheckScheduler = Executors.newSingleThreadScheduledExecutor();
 
@@ -314,48 +309,66 @@ public class MainController {
         tvPackagesProductsSuppliers.setItems(dataPackageProductSupplier);
 
         LoadData();
-
+// ---------------------------------------------------------------------------------------------------------Buttons Functionality---------------------------------------------------------------------------------------------------------
 
     }
     @FXML
     private void handleAddButtonClick() {
-        showModal(null);
+        Tab currentTab = tpMain.getSelectionModel().getSelectedItem();
+        if (currentTab == tbAgent) {
+            showModalAgent(null);
+        } else {
+            // TODO: Adding more tables
+            System.out.println("Under Construction");
+        }
     }
     @FXML
     private void handleEditButtonClick() {
-        Agent selectedAgent = tvAgents.getSelectionModel().getSelectedItem();
-        if (selectedAgent != null) {
-            showModal(selectedAgent);
-        } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Selection Required");
-            alert.setHeaderText(null);
-            alert.setContentText("Please select an agent from the table to edit.");
-            alert.showAndWait();
+        Tab currentTab = tpMain.getSelectionModel().getSelectedItem();
+        if (currentTab == tbAgent) {
+            Agent selectedAgent = tvAgents.getSelectionModel().getSelectedItem();
+            if (selectedAgent != null) {
+                showModalAgent(selectedAgent);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Selection Required");
+                alert.setHeaderText(null);
+                alert.setContentText("Please select an agent from the table to edit.");
+                alert.showAndWait();
+            }
+        }
+        else {
+            // TODO: Adding more tables
+            System.out.println("Under Construction");
         }
     }
     @FXML
     private void handleDeleteButtonClick() {
-        Agent selectedAgent = tvAgents.getSelectionModel().getSelectedItem();
+        Tab currentTab = tpMain.getSelectionModel().getSelectedItem();
+        if (currentTab == tbAgent) {
+            Agent selectedAgent = tvAgents.getSelectionModel().getSelectedItem();
 
-        if (selectedAgent == null) {
-            showAlert("Selection Required", "Please select an agent to delete.");
-            return;
-        }
+            if (selectedAgent == null) {
+                showAlert("Selection Required", "Please select an agent to delete.");
+                return;
+            }
 
-        if (showConfirmation("Delete Confirmation", "Do you really want to delete this agent?")) {
-            if (AgentDAO.deleteAgent(selectedAgent)) {  // assuming deleteAgent returns boolean for success/failure
-                tvAgents.getItems().remove(selectedAgent);
-                showAlert("Success", "Agent deleted successfully.");
-            } else {
-                showAlert("Failure", "Could not delete the agent. Please try again later.");
+            if (showConfirmation("Delete Confirmation", "Do you really want to delete this agent?")) {
+                if (AgentDAO.deleteAgent(selectedAgent)) {  // assuming deleteAgent returns boolean for success/failure
+                    tvAgents.getItems().remove(selectedAgent);
+                    showAlert("Success", "Agent deleted successfully.");
+                } else {
+                    showAlert("Failure", "Could not delete the agent. Please try again later.");
+                }
             }
         }
+        else {
+            // TODO: Adding more tables
+            System.out.println("Under Construction");
+        }
     }
-    public void refreshTable() {
-        LoadData();
-    }
-    private void showModal(Agent agent) {
+
+    private void showModalAgent(Agent agent) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("addEdit_agent_view.fxml"));
             Parent root = loader.load();
@@ -380,6 +393,10 @@ public class MainController {
             e.printStackTrace();
         }
     }
+
+// ---------------------------------------------------------------------------------------------------------Utility and Helper Function---------------------------------------------------------------------------------------------------------
+
+
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING, message, ButtonType.OK);
         alert.setTitle(title);
@@ -522,7 +539,10 @@ public class MainController {
 
 
 
-    }//getAgents
+    }
+    public void refreshTable() {
+        LoadData();
+    }
 
     private String getSQL () {
         return this.sqlString;
