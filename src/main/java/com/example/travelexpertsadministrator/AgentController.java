@@ -120,6 +120,7 @@ public class AgentController {
 
     @FXML
     private TableColumn<Customer, String> custProv;
+    //--PACKAGES
     @FXML
     private TableColumn<Package, Double> pkgAgncCom;
 
@@ -141,12 +142,25 @@ public class AgentController {
     @FXML
     private TableColumn<Package, String> pkgPkgStartDate;
 
+    //--PRODUCTS
     @FXML
     private TableColumn<Product, Integer> prodId;
 
     @FXML
     private TableColumn<Product, String> prodName;
 
+    //--PRODUCTS_SUPPLIERS
+    @FXML
+    private TableColumn<Product_Supplier, Integer> prodSupProdId;
+
+    @FXML
+    private TableColumn<Product_Supplier, Integer> prodSupSupId;
+
+    @FXML
+    private TableColumn<Product_Supplier, Integer> prodSupplierId;
+
+    @FXML
+    private Tab tbProductsSuppliers;
 
     @FXML
     private Tab tbPackages;
@@ -168,6 +182,9 @@ public class AgentController {
 
     @FXML
     private Tab tbProducts;
+
+    @FXML
+    private TableView<Product_Supplier> tvProductsSuppliers;
 
     @FXML
     private TableView<Product> tvProducts;
@@ -202,6 +219,7 @@ public class AgentController {
     ObservableList<Package> dataPackage = FXCollections.observableArrayList();
 
     ObservableList<Product> dataProduct = FXCollections.observableArrayList();
+    ObservableList<Product_Supplier> dataProductSupplier = FXCollections.observableArrayList();
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
 
@@ -266,12 +284,17 @@ public class AgentController {
 //PRODUCTS
         prodId.setCellValueFactory(new PropertyValueFactory<Product,Integer>("productId"));
         prodName.setCellValueFactory(new PropertyValueFactory<Product,String>("productName"));
+//PRODUCTS_SUPPLIERS
+        prodSupplierId.setCellValueFactory(new PropertyValueFactory<Product_Supplier,Integer>("productSupplierId"));
+        prodSupProdId.setCellValueFactory(new PropertyValueFactory<Product_Supplier,Integer>("productId"));
+        prodSupSupId.setCellValueFactory(new PropertyValueFactory<Product_Supplier,Integer>("supplierId"));
 
         tvAgents.setItems(data);
         tvBookings.setItems(dataBooking);
         tvCustomers.setItems(dataCustomer);
         tvPackages.setItems(dataPackage);
         tvProducts.setItems(dataProduct);
+        tvProductsSuppliers.setItems(dataProductSupplier);
 
         getAgents();
 
@@ -346,6 +369,9 @@ public class AgentController {
                 else if (t1==tbProducts){
                     setSQL("Select * from Products");
                 }
+                else if (t1==tbProductsSuppliers){
+                    setSQL("Select * from products_suppliers");
+                }
 
 
                 data.clear();
@@ -353,6 +379,7 @@ public class AgentController {
                 dataCustomer.clear();
                 dataPackage.clear();
                 dataProduct.clear();
+                dataProductSupplier.clear();
 
                 String url = "";
                 String user = "";
@@ -411,6 +438,11 @@ public class AgentController {
                         } else if (t1==tbProducts) {
                             dataProduct.add(new Product
                                     (rs.getInt(1), rs.getString(2)
+                                    )
+                            );
+                        } else if (t1==tbProductsSuppliers) {
+                            dataProductSupplier.add(new Product_Supplier
+                                    (rs.getInt(1), rs.getInt(2), rs.getInt(3)
                                     )
                             );
                         }
