@@ -159,6 +159,16 @@ public class AgentController {
     @FXML
     private TableColumn<Product_Supplier, Integer> prodSupplierId;
 
+    //--PACKAGES_PRODUCTS_SUPPLIERS
+    @FXML
+    private TableColumn<Package_Product_Supplier, Integer> ppsPackageId;
+
+    @FXML
+    private TableColumn<Package_Product_Supplier, Integer> ppsProductSupplierId;
+
+    @FXML
+    private Tab tbPackagesProductsSuppliers;
+
     @FXML
     private Tab tbProductsSuppliers;
 
@@ -182,6 +192,9 @@ public class AgentController {
 
     @FXML
     private Tab tbProducts;
+
+    @FXML
+    private TableView<Package_Product_Supplier> tvPackagesProductsSuppliers;
 
     @FXML
     private TableView<Product_Supplier> tvProductsSuppliers;
@@ -212,14 +225,14 @@ public class AgentController {
     private String sqlString="";
     private final ScheduledExecutorService connectionCheckScheduler = Executors.newSingleThreadScheduledExecutor();
 
-
+    //fulfill Table-Views with Observable Lists from objects
     ObservableList<Agent> data= FXCollections.observableArrayList();
     ObservableList<Booking> dataBooking = FXCollections.observableArrayList();
     ObservableList<Customer> dataCustomer = FXCollections.observableArrayList();
     ObservableList<Package> dataPackage = FXCollections.observableArrayList();
-
     ObservableList<Product> dataProduct = FXCollections.observableArrayList();
     ObservableList<Product_Supplier> dataProductSupplier = FXCollections.observableArrayList();
+    ObservableList<Package_Product_Supplier> dataPackageProductSupplier = FXCollections.observableArrayList();
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
 
@@ -288,13 +301,17 @@ public class AgentController {
         prodSupplierId.setCellValueFactory(new PropertyValueFactory<Product_Supplier,Integer>("productSupplierId"));
         prodSupProdId.setCellValueFactory(new PropertyValueFactory<Product_Supplier,Integer>("productId"));
         prodSupSupId.setCellValueFactory(new PropertyValueFactory<Product_Supplier,Integer>("supplierId"));
-
+//PACKAGES_PRODUCTS_SUPPLIERS
+        ppsPackageId.setCellValueFactory(new PropertyValueFactory<Package_Product_Supplier,Integer>("ppsPackageId"));
+        ppsProductSupplierId.setCellValueFactory(new PropertyValueFactory<Package_Product_Supplier,Integer>("ppsProductSupplierId"));
+//Assign Observable Lists into the table-views
         tvAgents.setItems(data);
         tvBookings.setItems(dataBooking);
         tvCustomers.setItems(dataCustomer);
         tvPackages.setItems(dataPackage);
         tvProducts.setItems(dataProduct);
         tvProductsSuppliers.setItems(dataProductSupplier);
+        tvPackagesProductsSuppliers.setItems(dataPackageProductSupplier);
 
         getAgents();
 
@@ -365,12 +382,12 @@ public class AgentController {
                     setSQL("Select * from Customers");
                 } else if (t1==tbPackages){
                     setSQL("Select * from Packages");
-                }
-                else if (t1==tbProducts){
+                } else if (t1==tbProducts){
                     setSQL("Select * from Products");
-                }
-                else if (t1==tbProductsSuppliers){
+                } else if (t1==tbProductsSuppliers){
                     setSQL("Select * from products_suppliers");
+                } else if (t1==tbPackagesProductsSuppliers){
+                    setSQL("Select * from packages_products_suppliers");
                 }
 
 
@@ -380,6 +397,7 @@ public class AgentController {
                 dataPackage.clear();
                 dataProduct.clear();
                 dataProductSupplier.clear();
+                dataPackageProductSupplier.clear();
 
                 String url = "";
                 String user = "";
@@ -445,6 +463,11 @@ public class AgentController {
                                     (rs.getInt(1), rs.getInt(2), rs.getInt(3)
                                     )
                             );
+                        } else if (t1==tbPackagesProductsSuppliers) {
+                            dataPackageProductSupplier.add(new Package_Product_Supplier
+                                    (rs.getInt(1), rs.getInt(2)
+                                    )
+                            );
                         }
 
 
@@ -506,9 +529,9 @@ public class AgentController {
     // Method to update the connection status property
     private void updateConnectionStatus() {
         boolean isConnected = isDatabaseConnected();
-        System.out.println("Connection check...");
+//System.out.println("Connection check...");
         if (isConnected) {
-            System.out.println("[x] Connected");
+//System.out.println("[x] Connected");
 
             lbConnection.setTextFill(Color.GREEN);
         } else {
