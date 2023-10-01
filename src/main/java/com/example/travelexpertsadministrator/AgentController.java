@@ -142,6 +142,13 @@ public class AgentController {
     private TableColumn<Package, String> pkgPkgStartDate;
 
     @FXML
+    private TableColumn<Product, Integer> prodId;
+
+    @FXML
+    private TableColumn<Product, String> prodName;
+
+
+    @FXML
     private Tab tbPackages;
 
     @FXML // fx:id="tbBookings"
@@ -158,6 +165,12 @@ public class AgentController {
 
     @FXML // fx:id="tpMain"
     private TabPane tpMain; // Value injected by FXMLLoader
+
+    @FXML
+    private Tab tbProducts;
+
+    @FXML
+    private TableView<Product> tvProducts;
 
     @FXML
     private TableView<Package> tvPackages;
@@ -188,6 +201,7 @@ public class AgentController {
     ObservableList<Customer> dataCustomer = FXCollections.observableArrayList();
     ObservableList<Package> dataPackage = FXCollections.observableArrayList();
 
+    ObservableList<Product> dataProduct = FXCollections.observableArrayList();
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
 
@@ -249,12 +263,15 @@ public class AgentController {
         pkgPkgDesc.setCellValueFactory(new PropertyValueFactory<Package,String>("PkgDesc"));
         pkgBasePrice.setCellValueFactory(new PropertyValueFactory<Package,Double>("PkgBasePrice"));
         pkgAgncCom.setCellValueFactory(new PropertyValueFactory<Package,Double>("PkgAgencyCommission"));
-
+//PRODUCTS
+        prodId.setCellValueFactory(new PropertyValueFactory<Product,Integer>("productId"));
+        prodName.setCellValueFactory(new PropertyValueFactory<Product,String>("productName"));
 
         tvAgents.setItems(data);
         tvBookings.setItems(dataBooking);
         tvCustomers.setItems(dataCustomer);
         tvPackages.setItems(dataPackage);
+        tvProducts.setItems(dataProduct);
 
         getAgents();
 
@@ -326,12 +343,16 @@ public class AgentController {
                 } else if (t1==tbPackages){
                     setSQL("Select * from Packages");
                 }
+                else if (t1==tbProducts){
+                    setSQL("Select * from Products");
+                }
 
 
                 data.clear();
                 dataBooking.clear();
                 dataCustomer.clear();
                 dataPackage.clear();
+                dataProduct.clear();
 
                 String url = "";
                 String user = "";
@@ -385,6 +406,11 @@ public class AgentController {
                                             rs.getString(3), rs.getString(4),
                                             rs.getString(5), rs.getDouble(6),
                                             rs.getDouble(7)
+                                    )
+                            );
+                        } else if (t1==tbProducts) {
+                            dataProduct.add(new Product
+                                    (rs.getInt(1), rs.getString(2)
                                     )
                             );
                         }

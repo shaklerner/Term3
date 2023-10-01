@@ -134,6 +134,23 @@
                   </AnchorPane>
                </content>
             </Tab>
+            <Tab fx:id="tbProducts" closable="false" text="Products">
+               <content>
+                  <AnchorPane id="apHome" minHeight="0.0" minWidth="0.0" prefHeight="704.0" prefWidth="977.0">
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                     <children>
+                        <TableView fx:id="tvProducts" layoutX="13.0" layoutY="37.0" prefHeight="560.0" prefWidth="937.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
+                           <columns>
+                              <TableColumn fx:id="prodId" prefWidth="93.0" text="Product Id" />
+                              <TableColumn fx:id="prodName" prefWidth="133.0" text="Product Name" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
             </tabs>
         </TabPane>
     </center>
