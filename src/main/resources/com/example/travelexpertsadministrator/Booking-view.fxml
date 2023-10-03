@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.travelexpertsadministrator.AddEditBookingController">
+   <children>
+      <TextField fx:id="tfBookingId" layoutX="191.0" layoutY="38.0" promptText="Enter the Booking Id" />
+      <TextField fx:id="tfBookingDate" layoutX="191.0" layoutY="76.0" promptText="Enter the Booking Date" />
+      <TextField fx:id="tfBookingNo" layoutX="191.0" layoutY="111.0" promptText="Enter the Booking No" />
+      <TextField fx:id="tfBookingCount" layoutX="191.0" layoutY="146.0" promptText="Enter the Traveler Count" />
+      <TextField fx:id="tfCustomerId" layoutX="191.0" layoutY="181.0" promptText="Enter the Customer Id" />
+      <Label layoutX="32.0" layoutY="42.0" text="Booking Id:" />
+      <Label layoutX="32.0" layoutY="80.0" text="Booking Date:" />
+      <Label layoutX="29.0" layoutY="115.0" text="Booking No:" />
+      <Label layoutX="30.0" layoutY="150.0" text="Traveler Count:" />
+      <Label layoutX="28.0" layoutY="185.0" text="Customer Id:" />
+      <Label layoutX="26.0" layoutY="224.0" text="TravelType Id" />
+      <Label layoutX="26.0" layoutY="262.0" text="Package Id" />
+      <Button fx:id="btnAdd" layoutX="191.0" layoutY="321.0" mnemonicParsing="false" onAction="#btnAddBookingClicked" text="Add " />
+      <Button fx:id="btnCancel" layoutX="248.0" layoutY="321.0" mnemonicParsing="false" onAction="#btnCancelBookingCilcked" text="Cancel" />
+      <ComboBox fx:id="cbTavelType" layoutX="190.0" layoutY="220.0" prefWidth="150.0" promptText="Select Travel Type Id" />
+      <ComboBox fx:id="cbPackageId" layoutX="190.0" layoutY="258.0" prefWidth="150.0" promptText="Select Package Id" />
+   </children>
+</AnchorPane>
