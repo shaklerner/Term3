@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.travelexpertsadministrator.AddEditCustomerController"
+            prefHeight="450.0" prefWidth="600.0">
+
+    <Label text="First Name:" layoutX="50" layoutY="30"/>
+    <TextField fx:id="tfCustFName" layoutX="150" layoutY="30" />
+
+    <Label text="Last Name:" layoutX="50" layoutY="70"/>
+    <TextField fx:id="tfCustLName" layoutX="150" layoutY="70" />
+
+    <Label text="Address:" layoutX="50" layoutY="110"/>
+    <TextField fx:id="tfCustAddress" layoutX="150" layoutY="110" />
+
+    <Label text="City:" layoutX="50" layoutY="150"/>
+    <TextField fx:id="tfCustCity" layoutX="150" layoutY="150" />
+
+    <Label text="Province:" layoutX="50" layoutY="190"/>
+    <TextField fx:id="tfCustProv" layoutX="150" layoutY="190" />
+
+    <Label text="Postal Code:" layoutX="50" layoutY="230"/>
+    <TextField fx:id="tfCustPostal" layoutX="150" layoutY="230" />
+
+    <Label text="Country:" layoutX="50" layoutY="270"/>
+    <TextField fx:id="tfCustCountry" layoutX="150" layoutY="270" />
+
+    <Label text="Home Phone:" layoutX="50" layoutY="310"/>
+    <TextField fx:id="tfCustHomePhone" layoutX="150" layoutY="310" />
+
+    <Label text="Business Phone:" layoutX="50" layoutY="350"/>
+    <TextField fx:id="tfCustBusPhone" layoutX="150" layoutY="350" />
+
+    <Label text="Email:" layoutX="50" layoutY="390"/>
+    <TextField fx:id="tfCustEmail" layoutX="150" layoutY="390" />
+
+    <Label text="Agent" layoutX="50" layoutY="430"/>
+    <ComboBox fx:id="cbAgentId" layoutX="150" layoutY="430" />
+
+    <!-- Buttons for Save and Cancel -->
+    <Button text="Save" layoutX="150" layoutY="470" onAction="#btnAddCustomerClicked"/>
+    <Button text="Cancel" layoutX="250" layoutY="470" onAction="#btnCancelClicked"/>
+
+</AnchorPane>
