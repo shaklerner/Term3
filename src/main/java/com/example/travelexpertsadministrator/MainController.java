@@ -317,8 +317,11 @@ public class MainController {
         Tab currentTab = tpMain.getSelectionModel().getSelectedItem();
         if (currentTab == tbAgent) {
             showModalAgent(null);
-        } else {
-            // TODO: Adding more tables
+        } else if (currentTab == tbProducts) {
+            showModalProduct(null);
+        } else if (currentTab == tbCustomers) {
+            showModalCustomer(null);
+        }else {
             System.out.println("Under Construction");
         }
     }
@@ -337,8 +340,25 @@ public class MainController {
                 alert.showAndWait();
             }
         }
-        else {
-            // TODO: Adding more tables
+        else if (currentTab == tbProducts) {
+            Product selectedProduct = tvProducts.getSelectionModel().getSelectedItem();
+            if (selectedProduct != null) {
+                showModalProduct(selectedProduct);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Selection Required");
+                alert.setHeaderText(null);
+                alert.setContentText("Please select a product from the table to edit.");
+                alert.showAndWait();
+            }
+        } else if (currentTab == tbCustomers) {
+            Customer selectedCustomer = tvCustomers.getSelectionModel().getSelectedItem(); // Assuming you have tvCustomers as TableView<Customer>
+            if (selectedCustomer != null) {
+                showModalCustomer(selectedCustomer);
+            } else {
+                showAlert("Selection Required", "Please select a customer from the table to edit.");
+            }
+        } else {
             System.out.println("Under Construction");
         }
     }
@@ -352,7 +372,10 @@ public class MainController {
                 showAlert("Selection Required", "Please select an agent to delete.");
                 return;
             }
-
+            if (!AgentDAO.canDeleteAgent(selectedAgent.getAgentId())) {
+                showAlert("Error", "Cannot delete this agent as there are customers associated with it. Please reassign or remove the customers first.");
+                return;
+            }
             if (showConfirmation("Delete Confirmation", "Do you really want to delete this agent?")) {
                 if (AgentDAO.deleteAgent(selectedAgent)) {  // assuming deleteAgent returns boolean for success/failure
                     tvAgents.getItems().remove(selectedAgent);
@@ -362,11 +385,42 @@ public class MainController {
                 }
             }
         }
-        else {
-            // TODO: Adding more tables
+        else if (currentTab == tbProducts) {
+            Product selectedProduct = tvProducts.getSelectionModel().getSelectedItem();
+
+            if (selectedProduct == null) {
+                showAlert("Selection Required", "Please select a product to delete.");
+                return;
+            }
+
+            if (showConfirmation("Delete Confirmation", "Do you really want to delete this product?")) {
+                if (ProductDAO.deleteProduct(selectedProduct)) {
+                    tvProducts.getItems().remove(selectedProduct);
+                    showAlert("Success", "Product deleted successfully.");
+                } else {
+                    showAlert("Failure", "Could not delete the product. Please try again later.");
+                }
+            }
+        } else if (currentTab == tbCustomers) {
+            Customer selectedCustomer = tvCustomers.getSelectionModel().getSelectedItem();
+            if (selectedCustomer == null) {
+                showAlert("Selection Required", "Please select a customer to delete.");
+                return;
+            }
+
+            if (showConfirmation("Delete Confirmation", "Do you really want to delete this customer?")) {
+                if (CustomerDAO.deleteCustomer(selectedCustomer)) {  // Using the deleteCustomer method
+                    tvCustomers.getItems().remove(selectedCustomer);
+                    showAlert("Success", "Customer deleted successfully.");
+                } else {
+                    showAlert("Failure", "Could not delete the customer. Please try again later.");
+                }
+            }
+        } else {
             System.out.println("Under Construction");
         }
     }
+// ---------------------------------------------------------------------------------------------------------Modal Display---------------------------------------------------------------------------------------------------------
 
     private void showModalAgent(Agent agent) {
         try {
@@ -393,6 +447,49 @@ public class MainController {
             e.printStackTrace();
         }
     }
+    private void showModalProduct(Product product) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("addEdit_product_view.fxml"));
+            Parent root = loader.load();
+
+            AddEditProductController controller = loader.getController();
+            controller.setProduct(product);
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle(product == null ? "Add New Product" : "Edit Product");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+            // Here, you can refresh the product table data after subview closes
+            // for instance: refreshProductTable();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void showModalCustomer(Customer customer) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("addEdit_customer_view.fxml"));
+            Parent root = loader.load();
+            AddEditCustomerController controller = loader.getController();
+
+            controller.setCustomer(customer); // Assuming you have this method in AddEditCustomerController
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle(customer == null ? "Add Customer" : "Edit Customer");
+            stage.showAndWait();
+
+            // Refresh the customer table view after modal closes, if needed
+            // for example: loadCustomersToTable();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 // ---------------------------------------------------------------------------------------------------------Utility and Helper Function---------------------------------------------------------------------------------------------------------
 

@@ -93,4 +93,22 @@ public class AgentDAO {
         }
         return agencyIds;
     }
+    public static boolean canDeleteAgent(int agentId) {
+        // Query to check if there are customers with the given AgentId
+        String query = "SELECT COUNT(*) FROM customers WHERE AgentId = ?";
+        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, agentId);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next() && rs.getInt(1) > 0) {
+                return false; // There are customers associated with this agent
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;  // Agent can be deleted
+    }
 }

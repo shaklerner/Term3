@@ -32,7 +32,6 @@ public class AddEditAgentController {
 
         if (mode == Mode.EDIT && agent != null) {
             populateFields(agent);
-            cbAgencyId.getSelectionModel().select(agent.getAgencyId());
         }
     }
 
@@ -43,12 +42,16 @@ public class AddEditAgentController {
         tfPhone.setText(agent.getAgtPhone());
         tfEmail.setText(agent.getAgtEmail());
         tfPosition.setText(agent.getAgtPosition());
+        cbAgencyId.getSelectionModel().select(agent.getAgencyId());
     }
 
     @FXML
     private void btnAddAgentClicked() {
         if (!validateInput()) return;
-
+        if (cbAgencyId.getSelectionModel().getSelectedItem() == null) {
+            showAlert("Error", "Please select an agency.");
+            return;
+        }
         if (showConfirmation("Confirmation", "Are you sure you want to add/update this agent?")) {
             Agent agentToSave = (currentMode == Mode.EDIT && currentAgent != null) ? currentAgent : new Agent(-1, "", "", "", "", "", "", -1);
             populateAgentFromFields(agentToSave);
@@ -70,33 +73,49 @@ public class AddEditAgentController {
         agent.setAgtPhone(tfPhone.getText());
         agent.setAgtEmail(tfEmail.getText());
         agent.setAgtPosition(tfPosition.getText());
-        agent.setAgencyId(cbAgencyId.getSelectionModel().getSelectedItem());
+
+        Integer selectedAgencyId = cbAgencyId.getSelectionModel().getSelectedItem();
+        if (selectedAgencyId == null) {
+            // handle the case, maybe set to a default value or show an error
+            agent.setAgencyId(-1);
+        } else {
+            agent.setAgencyId(selectedAgencyId);
+        }
     }
 
     private boolean validateInput() {
-        return !(isLongerThan(tfFirstName, 20, "First Name cannot be longer than 20 characters") ||
-                isLongerThan(tfMiddleInit, 1, "Middle Initial cannot be longer than 1 character") ||
-                isLongerThan(tfLastName, 20, "Last Name cannot be longer than 20 characters") ||
-                !isValidEmail(tfEmail.getText(), "Email is not valid. Please enter a correct email address.") ||
-                isLongerThan(tfPosition, 50, "Position cannot be longer than 50 characters"));
-    }
-
-    private boolean isLongerThan(TextField tf, int length, String message) {
-        if (tf.getText().length() > length) {
-            showAlert("Error", message);
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isValidEmail(String email, String errorMessage) {
-        if (!Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$").matcher(email).matches()) {
-            showAlert("Error", errorMessage);
+        // Checking for null or empty fields
+        if (ValidationUtils.isEmptyOrNull(tfFirstName.getText())) {
+            showAlert("Error", "First Name cannot be empty.");
             return false;
         }
+        if (ValidationUtils.isEmptyOrNull(tfLastName.getText())) {
+            showAlert("Error", "Last Name cannot be empty.");
+            return false;
+        }
+        if (ValidationUtils.exceedsMaxLength(tfFirstName.getText(), 20)) {
+            showAlert("Error", "First Name cannot be longer than 20 characters");
+            return false;
+        }
+        if (ValidationUtils.exceedsMaxLength(tfMiddleInit.getText(), 1)) {
+            showAlert("Error", "Middle Initial cannot be longer than 1 character");
+            return false;
+        }
+        if (ValidationUtils.exceedsMaxLength(tfLastName.getText(), 20)) {
+            showAlert("Error", "Last Name cannot be longer than 20 characters");
+            return false;
+        }
+        if (!ValidationUtils.isValidEmail(tfEmail.getText())) {
+            showAlert("Error", "Email is not valid. Please enter a correct email address.");
+            return false;
+        }
+        if (ValidationUtils.exceedsMaxLength(tfPosition.getText(), 50)) {
+            showAlert("Error", "Position cannot be longer than 50 characters");
+            return false;
+        }
+
         return true;
     }
-
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING, message, ButtonType.OK);
         alert.setTitle(title);
