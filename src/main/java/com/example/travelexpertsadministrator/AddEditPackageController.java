@@ -96,6 +96,7 @@ public class AddEditPackageController {
         this.currentPackage = mypackage;
 
         if (mode == Mode.EDIT && mypackage != null) {
+            btnPkgAdd.setText("Edit");
             populateFields(mypackage);
         }
     }
@@ -105,12 +106,10 @@ public class AddEditPackageController {
             tfPkgId.setDisable(true);
             tfPkgName.setText(mypackage.getPkgName());
         // Create a DateTimeFormatter to specify the format of your date string
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd 00:00:00"); // Change the pattern as per your date format
-
-// Parse the String date to a LocalDate
-        LocalDate localDate1 = LocalDate.parse((mypackage.getPkgStartDate()), dateFormatter);
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd 00:00:00"); // Change the pattern as per your date format
+            LocalDate localDate1 = LocalDate.parse((mypackage.getPkgStartDate()), dateFormatter);
             dpPkgStartDate.setValue(localDate1);
-        LocalDate localDate2 = LocalDate.parse((mypackage.getPkgEndDate()), dateFormatter);
+            LocalDate localDate2 = LocalDate.parse((mypackage.getPkgEndDate()), dateFormatter);
             dpPkgEndDate.setValue(localDate2);
             tfPkgBasePrice.setText(mypackage.getPkgBasePrice()+"");
             tfPkgAgencyCommission.setText(mypackage.getPkgAgencyCommission()+"");
