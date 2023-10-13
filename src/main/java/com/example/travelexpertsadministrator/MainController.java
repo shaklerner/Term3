@@ -321,6 +321,8 @@ public class MainController {
             showModalProduct(null);
         } else if (currentTab == tbCustomers) {
             showModalCustomer(null);
+        } else if (currentTab == tbPackages) {
+            showModalPackage(null);
         }else {
             System.out.println("Under Construction");
         }
@@ -358,7 +360,19 @@ public class MainController {
             } else {
                 showAlert("Selection Required", "Please select a customer from the table to edit.");
             }
-        } else {
+        } else if (currentTab == tbPackages) {
+            Package selectedPackage = tvPackages.getSelectionModel().getSelectedItem();
+            if (selectedPackage != null) {
+                showModalPackage(selectedPackage);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Selection Required");
+                alert.setHeaderText(null);
+                alert.setContentText("Please select a product from the table to edit.");
+                alert.showAndWait();
+            }
+        }
+        else {
             System.out.println("Under Construction");
         }
     }
@@ -414,6 +428,21 @@ public class MainController {
                     showAlert("Success", "Customer deleted successfully.");
                 } else {
                     showAlert("Failure", "Could not delete the customer. Please try again later.");
+                }
+            }
+        } else if (currentTab == tbPackages) {
+            Package selectedPackage = tvPackages.getSelectionModel().getSelectedItem();
+            if (selectedPackage == null) {
+                showAlert("Selection Required", "Please select a package to delete.");
+                return;
+            }
+
+            if (showConfirmation("Delete Confirmation", "Do you really want to delete this package?")) {
+                if (PackageDAO.deletePackage(selectedPackage)) {  // Using the deletePackage method
+                    tvPackages.getItems().remove(selectedPackage);
+                    showAlert("Success", "Package deleted successfully.");
+                } else {
+                    showAlert("Failure", "Could not delete the package. Please try again later.");
                 }
             }
         } else {
@@ -488,7 +517,34 @@ public class MainController {
             e.printStackTrace();
         }
     }
+    private void showModalPackage(Package mypackage) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("addEdit_package_view.fxml"));
+            Parent root = loader.load();
 
+            AddEditPackageController controller = loader.getController();
+            controller.setMainController(this);
+
+            if (mypackage == null) {
+
+                controller.setModeAndData(AddEditPackageController.Mode.ADD, null);
+            } else {
+                controller.setModeAndData(AddEditPackageController.Mode.EDIT, mypackage);
+            }
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle(mypackage == null ? "Add New Package" : "Edit Package");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+            // Here, you can refresh the product table data after subview closes
+            // for instance: refreshProductTable();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 // ---------------------------------------------------------------------------------------------------------Utility and Helper Function---------------------------------------------------------------------------------------------------------
