@@ -119,7 +119,7 @@ public class AddEditPackageController {
 
 
     private void btnAddClicked() {
-        if (!true) return;//add validator later
+        if (!validateInput()) return;
 
         if (currentPackage == null) {
             Package newPackage = new Package(-1, tfPkgName.getText(),dpPkgStartDate.getValue()+"",dpPkgEndDate.getValue()+"",taPkgDesc.getText(),Double.parseDouble(tfPkgBasePrice.getText()),Double.parseDouble(tfPkgAgencyCommission.getText()));
@@ -161,5 +161,48 @@ public class AddEditPackageController {
         ((Stage) tfPkgName.getScene().getWindow()).close();
     }
 
+    private boolean validateInput() {
+
+        //give date to the both date pickers
+
+
+        if (tfPkgName.getText().isEmpty()) {
+            showAlert("Error", "Package name cannot be empty.");
+            return false;
+        }
+        else
+        {
+            if(tfPkgBasePrice.getText().isEmpty())
+                    {
+                        showAlert("Error", "Package-Base-Price cannot be empty.");
+                        return false;
+                    }
+            else
+            {
+                if(dpPkgStartDate.getValue()==null)
+                {
+                    showAlert("Error", "Package-Start-Date cannot be empty.");
+                    return false;
+                }
+                else {
+                    if(dpPkgEndDate.getValue()==null)
+                    {
+                        showAlert("Error", "Package-End-Date cannot be empty.");
+                        return false;
+                    }
+                    else {
+                        if (dpPkgEndDate.getValue() != null && dpPkgStartDate.getValue() != null) {
+                            if (dpPkgEndDate.getValue().isBefore(dpPkgStartDate.getValue())) {
+                                showAlert("Error", "Package-End-Date cannot be before Package-Start-Date.");
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
 
 }
