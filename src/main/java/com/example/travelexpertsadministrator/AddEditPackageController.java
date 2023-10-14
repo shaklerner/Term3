@@ -191,10 +191,16 @@ public class AddEditPackageController {
                         return false;
                     }
                     else {
-                        if (dpPkgEndDate.getValue() != null && dpPkgStartDate.getValue() != null) {
-                            if (dpPkgEndDate.getValue().isBefore(dpPkgStartDate.getValue())) {
-                                showAlert("Error", "Package-End-Date cannot be before Package-Start-Date.");
-                                return false;
+                        if(tfPkgAgencyCommission.getText().isEmpty())
+                        {
+                            tfPkgAgencyCommission.setText("0");
+                        }
+                        else {
+                            if (dpPkgEndDate.getValue() != null && dpPkgStartDate.getValue() != null) {
+                                if (dpPkgEndDate.getValue().isBefore(dpPkgStartDate.getValue())) {
+                                    showAlert("Error", "Package-End-Date cannot be before Package-Start-Date.");
+                                    return false;
+                                }
                             }
                         }
                     }
