@@ -26,7 +26,7 @@
                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </padding>
                             <children>
-                                <TextArea layoutX="29.0" layoutY="28.0" prefHeight="648.0" prefWidth="902.0" text="About Us&#10;&#10;Welcome to Travel Experts Agency, your trusted partner in making your travel dreams a reality. We understand that travel is not just about reaching a destination;&#10;it's about the experiences, the memories, and the stories you create along the way. That's why we are here, dedicated to curating unforgettable journeys that exceed your expectations.&#10;&#10;Who We Are&#10;&#10;At Travel Experts Agency, we are a passionate team of travel enthusiasts and experts who believe that every journey should be a masterpiece. &#10;With years of experience in the travel industry, we have cultivated a deep understanding of the world's most captivating destinations, hidden gems, and cultural treasures.&#10;&#10;What We Do&#10;&#10;Our mission is simple: to make travel planning seamless, exciting, and accessible to everyone. We specialize in crafting the perfect travel packages tailored to your unique interests, whether you're seeking adventure, relaxation, cultural immersion, or a combination of it all. From awe-inspiring landscapes to vibrant cities, from serene beaches to thrilling wilderness, we have a package that suits your wanderlust.&#10;&#10;Why Choose Us&#10;&#10;Personalized Experiences: We don't believe in one-size-fits-all travel. Our team takes the time to get to know your preferences, ensuring each trip is tailored to your desires.&#10;&#10;Expert Guidance: Our travel experts are your navigators in the world of travel. We share insider tips, local insights, and recommendations to enhance your journey.&#10;&#10;Best Deals: We've partnered with trusted suppliers and negotiated exclusive deals to provide you with the best value for your money.&#10;&#10;Easy Booking: Booking your dream vacation is just a few clicks away. Our user-friendly website and dedicated support team make the process a breeze.&#10;&#10;Peace of Mind: Travel with confidence knowing that we're here for you, from planning your trip to assisting during your travels.&#10;&#10;Join Us on Your Next Adventure" wrapText="true">
+                                <TextArea layoutX="29.0" layoutY="28.0" prefHeight="648.0" prefWidth="902.0" text="About Travel Experts Manager&#10;&#10;Welcome to Travel Experts Manager, your all-in-one solution for managing your Travel Expert Database. Developed by Group-3, Travel Experts Manager is a cutting-edge software designed to streamline the process of adding and modifying Travel Expert information, making your travel agency's operations more efficient and effective.&#10;&#10;Our Mission&#10;&#10;At Travel Experts Manager, our mission is to empower travel agencies and their agents with a powerful tool that simplifies and enhances the management of their Travel Expert Database. We understand the importance of accurate and up-to-date information in the travel industry, and our software is designed to meet these needs.&#10;&#10;Key Features&#10;&#10;Travel Experts Manager offers a range of features to help travel agents and agencies maintain a comprehensive and organized Travel Expert Database:&#10;&#10;1. User-Friendly Interface: Our intuitive interface ensures that users of all levels can easily navigate and utilize the software.&#10;&#10;2. Efficient Data Entry:** Add new Travel Experts with ease, including details such as names, contact information, expertise, and more.&#10;&#10;3. Seamless Modifications:** Update existing Travel Expert profiles and information with just a few clicks.&#10;&#10;4. Data Security:** Your Travel Expert data is securely stored to maintain confidentiality and privacy.&#10;&#10;5. 24/7 Support: If you have any questions or need assistance, our dedicated support team is available 24/7. Contact us at +1 000-000-0000 or email us at group-3-support@blabla.ca for prompt and helpful support.&#10;&#10;Why Choose Travel Experts Manager?&#10;&#10;Choosing Travel Experts Manager means choosing efficiency, accuracy, and convenience in managing your Travel Expert Database. Our software is designed to save you time and reduce the likelihood of errors, ensuring that your agency can focus on delivering exceptional travel experiences to your clients.&#10;&#10;Experience the benefits of Travel Experts Manager and unlock the potential of your travel agency's operations. Contact us today to learn more about how we can help you manage your Travel Expert Database effectively.&#10;&#10;Thank you for considering Travel Experts Manager, the trusted choice for travel agencies worldwide." wrapText="true">
                                     <font>
                                         <Font size="14.0" />
                                     </font>
@@ -144,7 +144,24 @@
                         <TableView fx:id="tvProducts" layoutX="13.0" layoutY="37.0" prefHeight="560.0" prefWidth="937.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
                            <columns>
                               <TableColumn fx:id="prodId" prefWidth="93.0" text="Product Id" />
-                              <TableColumn fx:id="prodName" prefWidth="133.0" text="Product Name" />
+                              <TableColumn fx:id="prodName" prefWidth="241.0" text="Product Name" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab fx:id="tbSuppliers" closable="false" text="Suppliers">
+               <content>
+                  <AnchorPane id="apHome" minHeight="0.0" minWidth="0.0" prefHeight="704.0" prefWidth="977.0">
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                     <children>
+                        <TableView fx:id="tvSuppliers" layoutX="13.0" layoutY="37.0" prefHeight="560.0" prefWidth="937.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
+                           <columns>
+                              <TableColumn fx:id="supId" prefWidth="93.0" text="Supplier Id" />
+                              <TableColumn fx:id="supName" prefWidth="262.0" text="Supplier Name" />
                            </columns>
                         </TableView>
                      </children>

@@ -149,6 +149,12 @@ public class MainController {
     @FXML
     private TableColumn<Product, String> prodName;
 
+    //--SUPPLIERS
+    @FXML
+    private TableColumn<Supplier, Integer> supId;
+
+    @FXML
+    private TableColumn<Supplier, String> supName;
     //--PRODUCTS_SUPPLIERS
     @FXML
     private TableColumn<Product_Supplier, Integer> prodSupProdId;
@@ -166,11 +172,18 @@ public class MainController {
     @FXML
     private TableColumn<Package_Product_Supplier, Integer> ppsProductSupplierId;
 
+    //--TABS
     @FXML
     private Tab tbPackagesProductsSuppliers;
 
     @FXML
     private Tab tbProductsSuppliers;
+
+    @FXML
+    private Tab tbProducts;
+
+    @FXML // fx:id="tbSuppliers"
+    private Tab tbSuppliers; // Value injected by FXMLLoader
 
     @FXML
     private Tab tbPackages;
@@ -190,14 +203,15 @@ public class MainController {
     @FXML // fx:id="tpMain"
     private TabPane tpMain; // Value injected by FXMLLoader
 
-    @FXML
-    private Tab tbProducts;
-
+    //--TableViews
     @FXML
     private TableView<Package_Product_Supplier> tvPackagesProductsSuppliers;
 
     @FXML
     private TableView<Product_Supplier> tvProductsSuppliers;
+
+    @FXML // fx:id="tvSuppliers"
+    private TableView<Supplier> tvSuppliers; // Value injected by FXMLLoader
 
     @FXML
     private TableView<Product> tvProducts;
@@ -226,6 +240,7 @@ public class MainController {
     ObservableList<Customer> dataCustomer = FXCollections.observableArrayList();
     ObservableList<Package> dataPackage = FXCollections.observableArrayList();
     ObservableList<Product> dataProduct = FXCollections.observableArrayList();
+    ObservableList<Supplier> dataSupplier = FXCollections.observableArrayList();
     ObservableList<Product_Supplier> dataProductSupplier = FXCollections.observableArrayList();
     ObservableList<Package_Product_Supplier> dataPackageProductSupplier = FXCollections.observableArrayList();
     @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -292,6 +307,9 @@ public class MainController {
 //PRODUCTS
         prodId.setCellValueFactory(new PropertyValueFactory<Product,Integer>("productId"));
         prodName.setCellValueFactory(new PropertyValueFactory<Product,String>("productName"));
+//SUPPLIERS
+        supId.setCellValueFactory(new PropertyValueFactory<Supplier,Integer>("SupplierId"));
+        supName.setCellValueFactory(new PropertyValueFactory<Supplier,String>("SupName"));
 //PRODUCTS_SUPPLIERS
         prodSupplierId.setCellValueFactory(new PropertyValueFactory<Product_Supplier,Integer>("productSupplierId"));
         prodSupProdId.setCellValueFactory(new PropertyValueFactory<Product_Supplier,Integer>("productId"));
@@ -305,6 +323,7 @@ public class MainController {
         tvCustomers.setItems(dataCustomer);
         tvPackages.setItems(dataPackage);
         tvProducts.setItems(dataProduct);
+        tvSuppliers.setItems(dataSupplier);
         tvProductsSuppliers.setItems(dataProductSupplier);
         tvPackagesProductsSuppliers.setItems(dataPackageProductSupplier);
 
@@ -585,6 +604,8 @@ public class MainController {
                     setSQL("Select * from Packages");
                 } else if (t1==tbProducts){
                     setSQL("Select * from Products");
+                } else if (t1==tbSuppliers){
+                    setSQL("Select * from Suppliers");
                 } else if (t1==tbProductsSuppliers){
                     setSQL("Select * from products_suppliers");
                 } else if (t1==tbPackagesProductsSuppliers){
@@ -597,6 +618,7 @@ public class MainController {
                 dataCustomer.clear();
                 dataPackage.clear();
                 dataProduct.clear();
+                dataSupplier.clear();
                 dataProductSupplier.clear();
                 dataPackageProductSupplier.clear();
 
@@ -656,6 +678,11 @@ public class MainController {
                             );
                         } else if (t1==tbProducts) {
                             dataProduct.add(new Product
+                                    (rs.getInt(1), rs.getString(2)
+                                    )
+                            );
+                        } else if (t1==tbSuppliers) {
+                            dataSupplier.add(new Supplier
                                     (rs.getInt(1), rs.getString(2)
                                     )
                             );
