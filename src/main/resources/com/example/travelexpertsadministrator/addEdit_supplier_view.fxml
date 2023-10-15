@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="201.0" prefWidth="555.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.travelexpertsadministrator.AddEditSupplierController">
+   <children>
+      <Button fx:id="btnAdd" layoutX="384.0" layoutY="107.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="56.0" text="Add">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnCancel" layoutX="476.0" layoutY="107.0" mnemonicParsing="false" text="Cancel">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
+      <Label layoutX="109.0" layoutY="64.0" text="ID:">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="37.0" layoutY="111.0" text="Supplier Name:">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <TextField fx:id="tfSupId" editable="false" layoutX="138.0" layoutY="60.0" prefHeight="27.0" prefWidth="57.0">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="tfSupName" layoutX="138.0" layoutY="107.0" prefHeight="27.0" prefWidth="212.0">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </TextField>
+   </children>
+</AnchorPane>

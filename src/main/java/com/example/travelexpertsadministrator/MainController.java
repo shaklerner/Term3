@@ -338,6 +338,8 @@ public class MainController {
             showModalAgent(null);
         } else if (currentTab == tbProducts) {
             showModalProduct(null);
+        } else if (currentTab == tbSuppliers) {
+            showModalSupplier(null);
         } else if (currentTab == tbCustomers) {
             showModalCustomer(null);
         } else if (currentTab == tbPackages) {
@@ -370,6 +372,17 @@ public class MainController {
                 alert.setTitle("Selection Required");
                 alert.setHeaderText(null);
                 alert.setContentText("Please select a product from the table to edit.");
+                alert.showAndWait();
+            }
+        } else if (currentTab == tbSuppliers) {
+            Supplier selectedSupplier = tvSuppliers.getSelectionModel().getSelectedItem();
+            if (selectedSupplier != null) {
+                showModalSupplier(selectedSupplier);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Selection Required");
+                alert.setHeaderText(null);
+                alert.setContentText("Please select a supplier from the table to edit.");
                 alert.showAndWait();
             }
         } else if (currentTab == tbCustomers) {
@@ -432,6 +445,22 @@ public class MainController {
                     showAlert("Success", "Product deleted successfully.");
                 } else {
                     showAlert("Failure", "Could not delete the product. Please try again later.");
+                }
+            }
+        } else if (currentTab == tbSuppliers) {
+            Supplier selectedSupplier = tvSuppliers.getSelectionModel().getSelectedItem();
+
+            if (selectedSupplier == null) {
+                showAlert("Selection Required", "Please select a supplier to delete.");
+                return;
+            }
+
+            if (showConfirmation("Delete Confirmation", "Do you really want to delete this supplier?")) {
+                if (SupplierDAO.deleteSupplier(selectedSupplier)) {
+                    tvSuppliers.getItems().remove(selectedSupplier);
+                    showAlert("Success", "Supplier deleted successfully.");
+                } else {
+                    showAlert("Failure", "Could not delete the supplier. Please try again later.");
                 }
             }
         } else if (currentTab == tbCustomers) {
@@ -511,6 +540,34 @@ public class MainController {
 
             // Here, you can refresh the product table data after subview closes
             // for instance: refreshProductTable();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void showModalSupplier(Supplier supplier) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("addEdit_supplier_view.fxml"));
+            Parent root = loader.load();
+
+            AddEditSupplierController controller = loader.getController();
+            controller.setMainController(this);
+
+            if (supplier == null) {
+
+                controller.setModeAndData(AddEditSupplierController.Mode.ADD, null);
+            } else {
+                controller.setModeAndData(AddEditSupplierController.Mode.EDIT, supplier);
+            }
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle(supplier == null ? "Add New Supplier" : "Edit Supplier");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+            // Here, you can refresh the product table data after subview closes
+            // for instance: refreshSupplierTable();
 
         } catch (IOException e) {
             e.printStackTrace();

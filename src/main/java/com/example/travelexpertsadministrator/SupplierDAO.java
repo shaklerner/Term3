@@ -8,11 +8,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class PackageDAO {
+public class SupplierDAO {
 
-    private static final String INSERT_PACKAGE_SQL = "INSERT INTO packages (PkgName, PkgStartDate, PkgEndDate, PkgDesc, PkgBasePrice, PkgAgencyCommission) VALUES (?,?,?,?,?,?)";
-    private static final String UPDATE_PACKAGE_SQL = "UPDATE packages SET PkgName=?,PkgStartDate=?,PkgEndDate=?,PkgDesc=?,PkgBasePrice=?,PkgAgencyCommission=? WHERE PackageId=?";
-    private static final String DELETE_PACKAGE_SQL = "DELETE FROM packages WHERE PackageId=?";
+    private static final String INSERT_SUPPLIER_SQL = "INSERT INTO suppliers (SupplierId, SupName)\n" +
+            "SELECT MAX(SupplierId) + 1, ? \n" +
+            "FROM suppliers;\n";
+    private static final String UPDATE_SUPPLIER_SQL = "UPDATE suppliers SET SupName=? WHERE SupplierId=?";
+    private static final String DELETE_SUPPLIER_SQL = "DELETE FROM suppliers WHERE SupplierId=?";
 
     private static Properties getConnectionProperties() {
         String currentDirectory = System.getProperty("user.dir");
@@ -30,24 +32,18 @@ public class PackageDAO {
             throw new RuntimeException(e);
         }
 
-
     }
 
-
-    public static boolean insertPackage(Package mypackage) {
+    public static boolean insertSupplier(Supplier supplier) {
 
         Properties p= getConnectionProperties();
 
 
         try (Connection connection = DriverManager.getConnection((String) p.get("url"), (String) p.get("user"), (String) p.get("password"));
-             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PACKAGE_SQL)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_SUPPLIER_SQL)) {
 
-            preparedStatement.setString(1, mypackage.getPkgName());
-            preparedStatement.setString(2, mypackage.getPkgStartDate());
-            preparedStatement.setString(3, mypackage.getPkgEndDate());
-            preparedStatement.setString(4, mypackage.getPkgDesc());
-            preparedStatement.setDouble(5, mypackage.getPkgBasePrice());
-            preparedStatement.setDouble(6, mypackage.getPkgAgencyCommission());
+            preparedStatement.setString(1, supplier.getSupName());
+
 
             int result = preparedStatement.executeUpdate();
             return result == 1;
@@ -58,18 +54,13 @@ public class PackageDAO {
         }
     }
 
-    public static boolean updatePackage(Package mypackage) {
+    public static boolean updateSupplier(Supplier supplier) {
         Properties p= getConnectionProperties();
         try (Connection connection = DriverManager.getConnection((String) p.get("url"), (String) p.get("user"), (String) p.get("password"));
-             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PACKAGE_SQL)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SUPPLIER_SQL)) {
 
-            preparedStatement.setString(1, mypackage.getPkgName());
-            preparedStatement.setString(2, mypackage.getPkgStartDate());
-            preparedStatement.setString(3, mypackage.getPkgEndDate());
-            preparedStatement.setString(4, mypackage.getPkgDesc());
-            preparedStatement.setDouble(5, mypackage.getPkgBasePrice());
-            preparedStatement.setDouble(6, mypackage.getPkgAgencyCommission());
-            preparedStatement.setInt(7,mypackage.getPackageId());
+            preparedStatement.setString(1, supplier.getSupName());
+            preparedStatement.setInt(2, supplier.getSupplierId());
 
             int result = preparedStatement.executeUpdate();
             return result == 1;
@@ -79,12 +70,13 @@ public class PackageDAO {
             return false;
         }
     }
-    public static boolean deletePackage(Package mypackage) {
+
+    public static boolean deleteSupplier(Supplier supplier) {
         Properties p= getConnectionProperties();
         try (Connection connection = DriverManager.getConnection((String) p.get("url"), (String) p.get("user"), (String) p.get("password"));
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PACKAGE_SQL)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SUPPLIER_SQL)) {
 
-            preparedStatement.setInt(1, mypackage.getPackageId());
+            preparedStatement.setInt(1, supplier.getSupplierId());
 
             int rowsAffected = preparedStatement.executeUpdate();
 
@@ -95,8 +87,5 @@ public class PackageDAO {
             return false;
         }
     }
-
-
-
 
 }
