@@ -9,8 +9,8 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class ProductSupplierDAO {
-    private static final String INSERT_PRODUCTSUPPLIER_SQL = "INSERT INTO products_suppliers (ProductSupplierId, ProductId, SupplierId) VALUES (?,?,?)";
-    private static final String UPDATE_PRODUCTSUPPLIER_SQL = "UPDATE products_suppliers SET ProductId=?,SupplierId=? WHERE ProductSupplierId=?";
+    private static final String INSERT_PRODUCTSUPPLIER_SQL = "INSERT INTO products_suppliers ( ProductId, SupplierId) VALUES (?,?)";
+    private static final String UPDATE_PRODUCTSUPPLIER_SQL = "UPDATE products_suppliers SET ProductId=? , SupplierId=? WHERE ProductSupplierId=?";
     private static final String DELETE_PRODUCTSUPPLIER_SQL = "DELETE FROM products_suppliers WHERE ProductSupplierId=?";
 
     private static Properties getConnectionProperties() {
@@ -40,9 +40,9 @@ public class ProductSupplierDAO {
         try (Connection connection = DriverManager.getConnection((String) p.get("url"), (String) p.get("user"), (String) p.get("password"));
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PRODUCTSUPPLIER_SQL)) {
 
-            preparedStatement.setInt(1, productSupplier.getProductSupplierId());
-            preparedStatement.setInt(2, productSupplier.getProductId());
-            preparedStatement.setInt(3, productSupplier.getSupplierId());
+            //preparedStatement.setInt(1, productSupplier.getProductSupplierId());
+            preparedStatement.setInt(1, productSupplier.getProductId());
+            preparedStatement.setInt(2, productSupplier.getSupplierId());
 
             int result = preparedStatement.executeUpdate();
             return result == 1;
@@ -58,10 +58,12 @@ public class ProductSupplierDAO {
         try (Connection connection = DriverManager.getConnection((String) p.get("url"), (String) p.get("user"), (String) p.get("password"));
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PRODUCTSUPPLIER_SQL)) {
 
-            preparedStatement.setInt(1, productSupplier.getProductId());
-            preparedStatement.setInt(2, productSupplier.getSupplierId());
+            preparedStatement.setInt(1, productSupplier.getSupplierId());
+            preparedStatement.setInt(2, productSupplier.getProductId());
             preparedStatement.setInt(3, productSupplier.getProductSupplierId());
-
+            //System.out.println("SuppID: "+productSupplier.getSupplierId());
+            //System.out.println("ProdID: "+productSupplier.getProductId());
+            //System.out.println(preparedStatement.toString());
             int result = preparedStatement.executeUpdate();
             return result == 1;
 

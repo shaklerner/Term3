@@ -32,9 +32,9 @@ public class ProductDAO {
         int productId = -1; // Default value if the product is not found
 
         // Assuming you have a database connection and a statement, you can retrieve the product ID like this:
-        String selectSQL = "SELECT ProductId FROM products WHERE product_name = ?";
+        String selectSQL = "SELECT ProductId FROM products WHERE ProdName = ?";
         try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
             preparedStatement.setString(1, productName);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {

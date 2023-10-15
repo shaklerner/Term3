@@ -2,10 +2,9 @@ package com.example.travelexpertsadministrator;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class SupplierDAO {
@@ -86,6 +85,50 @@ public class SupplierDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static List<String> fetchSupplierNamesFromDatabase() {
+        List<String> supplierNames = new ArrayList<>();
+
+        // Assuming you have a database connection and a statement, you can retrieve supplier names like this:
+        String selectSQL = "SELECT SupName FROM suppliers";
+        Properties p= getConnectionProperties();
+        try (Connection connection = DriverManager.getConnection((String) p.get("url"), (String) p.get("user"), (String) p.get("password"));
+             PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                String supplierName = resultSet.getString("SupName");
+                supplierNames.add(supplierName);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return supplierNames;
+    }
+
+    public static int fetchSupplierIdFromDatabase(String supplierName) {
+        int supplierId = -1;  // Initialize to a default value or handle not found case
+        Properties p= getConnectionProperties();
+        String sql = "SELECT SupplierId FROM suppliers WHERE SupName = ?";
+
+
+            try (Connection conn = DriverManager.getConnection((String) p.get("url"), (String) p.get("user"), (String) p.get("password"));
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+                stmt.setString(1, supplierName);
+                ResultSet rs = stmt.executeQuery();
+
+                if (rs.next()) {
+                    supplierId = rs.getInt("SupplierId");
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+
+        return supplierId;
     }
 
 }

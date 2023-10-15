@@ -328,6 +328,9 @@ public class MainController {
         tvPackagesProductsSuppliers.setItems(dataPackageProductSupplier);
 
         LoadData();
+        tpMain.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+            @Override
+            public void changed(ObservableValue<? extends Tab> observableValue, Tab tab, Tab t1) {LoadData();}});
 // ---------------------------------------------------------------------------------------------------------Buttons Functionality---------------------------------------------------------------------------------------------------------
 
     }
@@ -340,6 +343,8 @@ public class MainController {
             showModalProduct(null);
         } else if (currentTab == tbSuppliers) {
             showModalSupplier(null);
+        } else if (currentTab == tbProductsSuppliers) {
+            showModalProductSupplier(null);
         } else if (currentTab == tbCustomers) {
             showModalCustomer(null);
         } else if (currentTab == tbPackages) {
@@ -383,6 +388,17 @@ public class MainController {
                 alert.setTitle("Selection Required");
                 alert.setHeaderText(null);
                 alert.setContentText("Please select a supplier from the table to edit.");
+                alert.showAndWait();
+            }
+        } else if (currentTab == tbProductsSuppliers) {
+            Product_Supplier selectedProductSupplier = tvProductsSuppliers.getSelectionModel().getSelectedItem();
+            if (selectedProductSupplier != null) {
+                showModalProductSupplier(selectedProductSupplier);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Selection Required");
+                alert.setHeaderText(null);
+                alert.setContentText("Please select a product_supplier from the table to edit.");
                 alert.showAndWait();
             }
         } else if (currentTab == tbCustomers) {
@@ -463,6 +479,22 @@ public class MainController {
                     showAlert("Failure", "Could not delete the supplier. Please try again later.");
                 }
             }
+        }  else if (currentTab == tbProductsSuppliers) {
+            Product_Supplier selectedProductSupplier = tvProductsSuppliers.getSelectionModel().getSelectedItem();
+
+            if (selectedProductSupplier == null) {
+                showAlert("Selection Required", "Please select a product_supplier to delete.");
+                return;
+            }
+
+            if (showConfirmation("Delete Confirmation", "Do you really want to delete this product_supplier?")) {
+                if (ProductSupplierDAO.deleteProductSupplier(selectedProductSupplier)) {
+                    tvProductsSuppliers.getItems().remove(selectedProductSupplier);
+                    showAlert("Success", "Product_Supplier deleted successfully.");
+                } else {
+                    showAlert("Failure", "Could not delete the product_supplier. Please try again later.");
+                }
+            }
         } else if (currentTab == tbCustomers) {
             Customer selectedCustomer = tvCustomers.getSelectionModel().getSelectedItem();
             if (selectedCustomer == null) {
@@ -520,6 +552,8 @@ public class MainController {
             stage.showAndWait();
 
             refreshTable(); // Refresh the table data after subview closes
+            data.clear();
+            LoadData();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -540,7 +574,8 @@ public class MainController {
 
             // Here, you can refresh the product table data after subview closes
             // for instance: refreshProductTable();
-
+            dataProduct.clear();
+            LoadData();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -568,11 +603,43 @@ public class MainController {
 
             // Here, you can refresh the product table data after subview closes
             // for instance: refreshSupplierTable();
-
+            dataSupplier.clear();
+            LoadData(); // Load the updated data into the table view
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    private void showModalProductSupplier(Product_Supplier productSupplier) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("addEdit_product_supplier_view.fxml"));
+            Parent root = loader.load();
+
+            AddEditProductSupplierController controller = loader.getController();
+            controller.setMainController(this);
+
+            if (productSupplier == null) {
+
+                controller.setModeAndData(AddEditProductSupplierController.Mode.ADD, null);
+            } else {
+                controller.setModeAndData(AddEditProductSupplierController.Mode.EDIT, productSupplier);
+            }
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle(productSupplier == null ? "Add New Product_Supplier" : "Edit Product_Supplier");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+            // Here, you can refresh the product table data after subview closes
+            // for instance: refreshSupplierTable();
+            dataProductSupplier.clear();
+            LoadData(); // Load the updated data into the table view
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void showModalCustomer(Customer customer) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("addEdit_customer_view.fxml"));
@@ -589,6 +656,8 @@ public class MainController {
 
             // Refresh the customer table view after modal closes, if needed
             // for example: loadCustomersToTable();
+            dataCustomer.clear();
+            LoadData(); // Load the updated data into the table view
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -616,7 +685,8 @@ public class MainController {
 
             // Here, you can refresh the product table data after subview closes
             // for instance: refreshProductTable();
-
+            dataPackage.clear();
+            LoadData(); // Load the updated data into the table view
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -644,6 +714,29 @@ public class MainController {
     private void LoadData() {
 
         setSQL("SELECT * FROM agents");
+        Tab currentTab= tpMain.getSelectionModel().getSelectedItem();
+
+        if (currentTab==tbAgent) {
+
+            setSQL("Select * from agents");
+        } else if (currentTab==tbBookings) {
+
+            setSQL("Select * from bookings");
+        } else if (currentTab==tbCustomers){
+            setSQL("Select * from Customers");
+        } else if (currentTab==tbPackages){
+            setSQL("Select * from Packages");
+        } else if (currentTab==tbProducts){
+            setSQL("Select * from Products");
+        } else if (currentTab==tbSuppliers){
+            setSQL("Select * from Suppliers");
+        } else if (currentTab==tbProductsSuppliers){
+            setSQL("Select * from products_suppliers");
+        } else if (currentTab==tbPackagesProductsSuppliers){
+            setSQL("Select * from packages_products_suppliers");
+        }
+
+        /*
         tpMain.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
             @Override
             public void changed(ObservableValue<? extends Tab> observableValue, Tab tab, Tab t1) {
@@ -668,7 +761,7 @@ public class MainController {
                 } else if (t1==tbPackagesProductsSuppliers){
                     setSQL("Select * from packages_products_suppliers");
                 }
-
+*/
 
                 data.clear();
                 dataBooking.clear();
@@ -699,7 +792,7 @@ public class MainController {
 
                     while (rs.next()) {
 
-                        if (t1==tbAgent) {
+                        if (currentTab==tbAgent) {
                             data.add(new Agent
                                     (rs.getInt(1), rs.getString(2),
                                             rs.getString(3), rs.getString(4),
@@ -707,7 +800,7 @@ public class MainController {
                                             rs.getString(7), rs.getInt(8)
                                     )
                             );
-                        } else if (t1==tbBookings) {
+                        } else if (currentTab==tbBookings) {
                             dataBooking.add(new Booking
                                     (rs.getInt(1), rs.getString(2),
                                             rs.getString(3), rs.getInt(4),
@@ -715,7 +808,7 @@ public class MainController {
                                             rs.getInt(7)
                                     )
                             );
-                        } else if (t1==tbCustomers) {
+                        } else if (currentTab==tbCustomers) {
                             dataCustomer.add(new Customer
                                     (rs.getInt(1), rs.getString(2),
                                             rs.getString(3), rs.getString(4),
@@ -725,7 +818,7 @@ public class MainController {
                                             rs.getString(11),rs.getInt(12)
                                     )
                             );
-                        } else if (t1==tbPackages) {
+                        } else if (currentTab==tbPackages) {
                             dataPackage.add(new Package
                                     (rs.getInt(1), rs.getString(2),
                                             rs.getString(3), rs.getString(4),
@@ -733,22 +826,22 @@ public class MainController {
                                             rs.getDouble(7)
                                     )
                             );
-                        } else if (t1==tbProducts) {
+                        } else if (currentTab==tbProducts) {
                             dataProduct.add(new Product
                                     (rs.getInt(1), rs.getString(2)
                                     )
                             );
-                        } else if (t1==tbSuppliers) {
+                        } else if (currentTab==tbSuppliers) {
                             dataSupplier.add(new Supplier
                                     (rs.getInt(1), rs.getString(2)
                                     )
                             );
-                        } else if (t1==tbProductsSuppliers) {
+                        } else if (currentTab==tbProductsSuppliers) {
                             dataProductSupplier.add(new Product_Supplier
                                     (rs.getInt(1), rs.getInt(2), rs.getInt(3)
                                     )
                             );
-                        } else if (t1==tbPackagesProductsSuppliers) {
+                        } else if (currentTab==tbPackagesProductsSuppliers) {
                             dataPackageProductSupplier.add(new Package_Product_Supplier
                                     (rs.getInt(1), rs.getInt(2)
                                     )
@@ -771,12 +864,12 @@ public class MainController {
 
 
             }
-        });
+        //});
 
 
 
 
-    }
+    //}
     public void refreshTable() {
         LoadData();
     }
