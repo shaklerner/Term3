@@ -1,8 +1,11 @@
 package com.example.travelexpertsadministrator;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class ProductDAO {
 
@@ -14,6 +17,24 @@ public class ProductDAO {
     private static final String UPDATE_PRODUCT_SQL = "UPDATE products SET ProdName=? WHERE ProductId=?";
     private static final String DELETE_PRODUCT_SQL = "DELETE FROM products WHERE ProductId = ?";
 
+    private static Properties getConnectionProperties() {
+        String currentDirectory = System.getProperty("user.dir");
+        FileInputStream fis=null;
+        try {
+
+            fis = new FileInputStream(currentDirectory.replaceAll("\\\\", "\\\\\\\\") + "\\connection.properties");
+            Properties p = new Properties();
+
+            //System.out.println("[x] read -- connection.properties -- ");
+            p.load(fis);
+            return p;
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
     public static boolean insertProduct(Product product) {
         try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PRODUCT_SQL)) {
@@ -66,6 +87,28 @@ public class ProductDAO {
         }
 
         return productNames;
+    }
+
+    public static String fetchProductNameWithId(int Id) {
+
+        // Assuming you have a database connection and a statement, you can retrieve the product ID like this:
+        String selectSQL = "SELECT distinct ProdName FROM products WHERE ProductId=?";
+        String productName="";
+        Properties p= getConnectionProperties();
+        try (Connection connection = DriverManager.getConnection((String) p.get("url"), (String) p.get("user"), (String) p.get("password"));
+             PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
+            preparedStatement.setInt(1, Id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    productName = resultSet.getString("ProdName");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return productName;
     }
 
     public static boolean updateProduct(Product product) {

@@ -131,4 +131,29 @@ public class SupplierDAO {
         return supplierId;
     }
 
+    public static String fetchSupplierNameWithId(int Id) {
+
+        // Assuming you have a database connection and a statement, you can retrieve the product ID like this:
+        String selectSQL = "SELECT distinct SupName FROM suppliers WHERE SupplierId=?";
+        String supplierName="";
+        Properties p= getConnectionProperties();
+        try (Connection connection = DriverManager.getConnection((String) p.get("url"), (String) p.get("user"), (String) p.get("password"));
+             PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
+            preparedStatement.setInt(1, Id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    supplierName = resultSet.getString("SupName");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return supplierName;
+    }
+
+
+
+
 }

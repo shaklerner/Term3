@@ -345,6 +345,8 @@ public class MainController {
             showModalSupplier(null);
         } else if (currentTab == tbProductsSuppliers) {
             showModalProductSupplier(null);
+        } else if (currentTab == tbPackagesProductsSuppliers) {
+            showModalPackageProductSupplier(null);
         } else if (currentTab == tbCustomers) {
             showModalCustomer(null);
         } else if (currentTab == tbPackages) {
@@ -399,6 +401,17 @@ public class MainController {
                 alert.setTitle("Selection Required");
                 alert.setHeaderText(null);
                 alert.setContentText("Please select a product_supplier from the table to edit.");
+                alert.showAndWait();
+            }
+        } else if (currentTab == tbPackagesProductsSuppliers) {
+            Package_Product_Supplier selectedPackageProductSupplier = tvPackagesProductsSuppliers.getSelectionModel().getSelectedItem();
+            if (selectedPackageProductSupplier != null) {
+                showModalPackageProductSupplier(selectedPackageProductSupplier);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Selection Required");
+                alert.setHeaderText(null);
+                alert.setContentText("Please select a package_product_supplier from the table to edit.");
                 alert.showAndWait();
             }
         } else if (currentTab == tbCustomers) {
@@ -493,6 +506,22 @@ public class MainController {
                     showAlert("Success", "Product_Supplier deleted successfully.");
                 } else {
                     showAlert("Failure", "Could not delete the product_supplier. Please try again later.");
+                }
+            }
+        }  else if (currentTab == tbPackagesProductsSuppliers) {
+            Package_Product_Supplier selectedPackageProductSupplier = tvPackagesProductsSuppliers.getSelectionModel().getSelectedItem();
+
+            if (selectedPackageProductSupplier == null) {
+                showAlert("Selection Required", "Please select a package_product_supplier to delete.");
+                return;
+            }
+
+            if (showConfirmation("Delete Confirmation", "Do you really want to delete this package_product_supplier?")) {
+                if (PackageProductSupplierDAO.deletePackageProductSupplier(selectedPackageProductSupplier)) {
+                    tvPackagesProductsSuppliers.getItems().remove(selectedPackageProductSupplier);
+                    showAlert("Success", "Package_Product_Supplier deleted successfully.");
+                } else {
+                    showAlert("Failure", "Could not delete the package_product_supplier. Please try again later.");
                 }
             }
         } else if (currentTab == tbCustomers) {
@@ -640,6 +669,35 @@ public class MainController {
         }
     }
 
+    private void showModalPackageProductSupplier(Package_Product_Supplier packageProductSupplier) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("addEdit_package_product_supplier_view.fxml"));
+            Parent root = loader.load();
+
+            AddEditPackageProductSupplierController controller = loader.getController();
+            controller.setMainController(this);
+
+            if (packageProductSupplier == null) {
+
+                controller.setModeAndData(AddEditPackageProductSupplierController.Mode.ADD, null);
+            } else {
+                controller.setModeAndData(AddEditPackageProductSupplierController.Mode.EDIT, packageProductSupplier);
+            }
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle(packageProductSupplier == null ? "Add New Package_Product_Supplier" : "Edit Package_Product_Supplier");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+            // Here, you can refresh the product table data after subview closes
+            // for instance: refreshSupplierTable();
+            dataPackageProductSupplier.clear();
+            LoadData(); // Load the updated data into the table view
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     private void showModalCustomer(Customer customer) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("addEdit_customer_view.fxml"));
@@ -843,7 +901,7 @@ public class MainController {
                             );
                         } else if (currentTab==tbPackagesProductsSuppliers) {
                             dataPackageProductSupplier.add(new Package_Product_Supplier
-                                    (rs.getInt(1), rs.getInt(2)
+                                    (rs.getInt(1), rs.getInt(2),rs.getInt(2)
                                     )
                             );
                         }

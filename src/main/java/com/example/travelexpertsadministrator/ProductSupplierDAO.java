@@ -2,10 +2,9 @@ package com.example.travelexpertsadministrator;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class ProductSupplierDAO {
@@ -90,6 +89,75 @@ public class ProductSupplierDAO {
         }
     }
 
+    public static List<Integer> fetchAllProductSupplierIdsFromDatabase() {
+        int thisProductSupplierId = -1; // Default value if the product_Supplier is not found
+
+        // Assuming you have a database connection and a statement, you can retrieve the product ID like this:
+        String selectSQL = "SELECT distinct ProductSupplierId FROM products_suppliers";
+        List<Integer> productSupplierId = new ArrayList<>();
+        Properties p= getConnectionProperties();
+        try (Connection connection = DriverManager.getConnection((String) p.get("url"), (String) p.get("user"), (String) p.get("password"));
+             PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    thisProductSupplierId = resultSet.getInt("ProductSupplierId");
+                    productSupplierId.add(thisProductSupplierId);
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return productSupplierId;
+    }
+
+    public static int fetchProductIdFromProductSupplierId(int productSupplierId) {
+        int productId = -1; // Default value if the product is not found
+
+        // Assuming you have a database connection and a statement, you can retrieve the product ID like this:
+        String selectSQL = "SELECT distinct ProductId FROM products_suppliers WHERE ProductSupplierId=?";
+
+        Properties p= getConnectionProperties();
+        try (Connection connection = DriverManager.getConnection((String) p.get("url"), (String) p.get("user"), (String) p.get("password"));
+             PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
+            preparedStatement.setInt(1,productSupplierId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    productId = resultSet.getInt("ProductId");
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return productId;
+    }
+
+    public static int fetchSupplierIdFromProductSupplierId(int productSupplierId) {
+        int supplierId = -1; // Default value if the supplier is not found
+
+        // Assuming you have a database connection and a statement, you can retrieve the product ID like this:
+        String selectSQL = "SELECT distinct SupplierId FROM products_suppliers WHERE ProductSupplierId=?";
+
+        Properties p= getConnectionProperties();
+        try (Connection connection = DriverManager.getConnection((String) p.get("url"), (String) p.get("user"), (String) p.get("password"));
+             PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
+            preparedStatement.setInt(1,productSupplierId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    supplierId = resultSet.getInt("SupplierId");
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return supplierId;
+    }
 
 
 

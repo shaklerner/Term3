@@ -2,10 +2,9 @@ package com.example.travelexpertsadministrator;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class PackageDAO {
@@ -96,7 +95,50 @@ public class PackageDAO {
         }
     }
 
+    public static List<Integer> fetchAllPackageIdsFromDatabase() {
+        int thisPackageId = -1; // Default value if the package is not found
 
+        // Assuming you have a database connection and a statement, you can retrieve the product ID like this:
+        String selectSQL = "SELECT distinct PackageId FROM packages";
+        List<Integer> packageId = new ArrayList<>();
+        Properties p= getConnectionProperties();
+        try (Connection connection = DriverManager.getConnection((String) p.get("url"), (String) p.get("user"), (String) p.get("password"));
+            PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
 
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        thisPackageId = resultSet.getInt("PackageId");
+                        packageId.add(thisPackageId);
+                    }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return packageId;
+    }
+
+    public static String fetchPackageNamesFromDatabase(int Id) {
+
+        // Assuming you have a database connection and a statement, you can retrieve the product ID like this:
+        String selectSQL = "SELECT distinct PkgName FROM packages WHERE PackageId=?";
+        String packageName="";
+        Properties p= getConnectionProperties();
+        try (Connection connection = DriverManager.getConnection((String) p.get("url"), (String) p.get("user"), (String) p.get("password"));
+            PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
+            preparedStatement.setInt(1, Id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    packageName = resultSet.getString("PkgName");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return packageName;
+    }
 
 }
