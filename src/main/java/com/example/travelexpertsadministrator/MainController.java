@@ -15,12 +15,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -36,6 +38,15 @@ public class MainController {
 
     @FXML // URL location of the FXML file that was given to the FXMLLoader
     private URL location;
+
+    @FXML
+    private Button btnAdd;
+
+    @FXML
+    private Button btnDelete;
+
+    @FXML
+    private Button btnEdit;
 
     @FXML // fx:id="agcId"
     private TableColumn<Agent, Integer> agcId; // Value injected by FXMLLoader
@@ -326,7 +337,10 @@ public class MainController {
         tvSuppliers.setItems(dataSupplier);
         tvProductsSuppliers.setItems(dataProductSupplier);
         tvPackagesProductsSuppliers.setItems(dataPackageProductSupplier);
-
+//Setting-up buttons in About page as disabled
+        btnAdd.setDisable(true);
+        btnEdit.setDisable(true);
+        btnDelete.setDisable(true);
         LoadData();
         tpMain.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
             @Override
@@ -358,6 +372,7 @@ public class MainController {
     @FXML
     private void handleEditButtonClick() {
         Tab currentTab = tpMain.getSelectionModel().getSelectedItem();
+
         if (currentTab == tbAgent) {
             Agent selectedAgent = tvAgents.getSelectionModel().getSelectedItem();
             if (selectedAgent != null) {
@@ -603,6 +618,7 @@ public class MainController {
 
             // Here, you can refresh the product table data after subview closes
             // for instance: refreshProductTable();
+            refreshTable();
             dataProduct.clear();
             LoadData();
         } catch (IOException e) {
@@ -632,6 +648,7 @@ public class MainController {
 
             // Here, you can refresh the product table data after subview closes
             // for instance: refreshSupplierTable();
+            refreshTable();
             dataSupplier.clear();
             LoadData(); // Load the updated data into the table view
         } catch (IOException e) {
@@ -662,6 +679,7 @@ public class MainController {
 
             // Here, you can refresh the product table data after subview closes
             // for instance: refreshSupplierTable();
+            refreshTable();
             dataProductSupplier.clear();
             LoadData(); // Load the updated data into the table view
         } catch (IOException e) {
@@ -692,6 +710,7 @@ public class MainController {
 
             // Here, you can refresh the product table data after subview closes
             // for instance: refreshSupplierTable();
+            refreshTable();
             dataPackageProductSupplier.clear();
             LoadData(); // Load the updated data into the table view
         } catch (IOException e) {
@@ -714,6 +733,7 @@ public class MainController {
 
             // Refresh the customer table view after modal closes, if needed
             // for example: loadCustomersToTable();
+            refreshTable();
             dataCustomer.clear();
             LoadData(); // Load the updated data into the table view
         } catch (IOException e) {
@@ -773,7 +793,18 @@ public class MainController {
 
         setSQL("SELECT * FROM agents");
         Tab currentTab= tpMain.getSelectionModel().getSelectedItem();
-
+        if (currentTab!=tbAbout)
+        {
+            btnDelete.setDisable(false);
+            btnEdit.setDisable(false);
+            btnAdd.setDisable(false);
+        }
+        else
+        {
+            btnDelete.setDisable(true);
+            btnEdit.setDisable(true);
+            btnAdd.setDisable(true);
+        }
         if (currentTab==tbAgent) {
 
             setSQL("Select * from agents");
@@ -793,33 +824,6 @@ public class MainController {
         } else if (currentTab==tbPackagesProductsSuppliers){
             setSQL("Select * from packages_products_suppliers");
         }
-
-        /*
-        tpMain.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
-            @Override
-            public void changed(ObservableValue<? extends Tab> observableValue, Tab tab, Tab t1) {
-
-
-                if (t1==tbAgent) {
-
-                    setSQL("Select * from agents");
-                } else if (t1==tbBookings) {
-
-                    setSQL("Select * from bookings");
-                } else if (t1==tbCustomers){
-                    setSQL("Select * from Customers");
-                } else if (t1==tbPackages){
-                    setSQL("Select * from Packages");
-                } else if (t1==tbProducts){
-                    setSQL("Select * from Products");
-                } else if (t1==tbSuppliers){
-                    setSQL("Select * from Suppliers");
-                } else if (t1==tbProductsSuppliers){
-                    setSQL("Select * from products_suppliers");
-                } else if (t1==tbPackagesProductsSuppliers){
-                    setSQL("Select * from packages_products_suppliers");
-                }
-*/
 
                 data.clear();
                 dataBooking.clear();
