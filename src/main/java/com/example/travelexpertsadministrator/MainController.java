@@ -958,12 +958,30 @@ public class MainController {
 
             // Attempt to establish a database connection
             try (Connection conn = DriverManager.getConnection(url, user, pass)) {
+                tbAgent.setDisable(false);
+                tbBookings.setDisable(false);
+                tbCustomers.setDisable(false);
+                tbPackages.setDisable(false);
+                tbProducts.setDisable(false);
+                tbProductsSuppliers.setDisable(false);
+                tbSuppliers.setDisable(false);
+                tbPackagesProductsSuppliers.setDisable(false);
                 return true;  // Connection successful
             } catch (SQLException e) {
-                e.printStackTrace();
+                tbAgent.setDisable(true);
+                tbBookings.setDisable(true);
+                tbCustomers.setDisable(true);
+                tbPackages.setDisable(true);
+                tbProducts.setDisable(true);
+                tbProductsSuppliers.setDisable(true);
+                tbSuppliers.setDisable(true);
+                tbPackagesProductsSuppliers.setDisable(true);
+                //e.printStackTrace();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+
+
+            //e.printStackTrace();
         }
 
         return false;  // Connection failed
