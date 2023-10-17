@@ -13,6 +13,10 @@ public class Booking {
     private SimpleStringProperty tripTypeId;
     private SimpleIntegerProperty packageId;
 
+    public Booking() {
+
+    }
+
     public int getBookingId() {
         return bookingId.get();
     }
@@ -96,6 +100,7 @@ public class Booking {
     public void setPackageId(int packageId) {
         this.packageId.set(packageId);
     }
+
 
 
     public Booking(int bookingId, String bookingDate,

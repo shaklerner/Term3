@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox spacing="15" alignment="CENTER" prefWidth="600" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.travelexpertsadministrator.AddEditBookingController">
+   <padding>
+      <Insets top="20" right="20" bottom="20" left="20"/>
+   </padding>
+
+   <Label text="Manage Bookings" style="-fx-font-size: 24px;" />
+
+   <GridPane hgap="10" vgap="10" alignment="CENTER" prefWidth="500">
+      <!-- Row 0 -->
+      <Label text="Booking Date:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+      <DatePicker fx:id="dpBookingDate" GridPane.columnIndex="1" GridPane.rowIndex="0" maxWidth="300" />
+
+      <!-- Row 1 -->
+      <Label text="Booking No:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+      <TextField fx:id="tfBookingNo" GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="300" />
+
+      <!-- Row 2 -->
+      <Label text="Traveler Count:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+      <TextField fx:id="tfTravelerCounter" GridPane.columnIndex="1" GridPane.rowIndex="2" maxWidth="300" />
+
+      <!-- Row 3 -->
+      <Label text="Customer ID:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+      <ComboBox fx:id="cbCustomerId" GridPane.columnIndex="1" GridPane.rowIndex="3" maxWidth="300" />
+
+      <!-- Row 4 -->
+      <Label text="Trip Type ID:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+      <ComboBox fx:id="cbTripTypeId" GridPane.columnIndex="1" GridPane.rowIndex="4" maxWidth="300" />
+
+      <!-- Row 5 -->
+      <Label text="Package ID:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+      <ComboBox fx:id="cbPackageId" GridPane.columnIndex="1" GridPane.rowIndex="5" maxWidth="300" />
+   </GridPane>
+
+   <HBox spacing="10" alignment="CENTER">
+      <Button text="Save" fx:id="btnSave" onAction="#btnAddEditBookingClicked" />
+      <Button text="Cancel" fx:id="btnCancel" onAction="#btnCancelClicked" />
+   </HBox>
+
+</VBox>

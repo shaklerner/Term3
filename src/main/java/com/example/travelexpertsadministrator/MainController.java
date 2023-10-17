@@ -365,7 +365,10 @@ public class MainController {
             showModalCustomer(null);
         } else if (currentTab == tbPackages) {
             showModalPackage(null);
-        }else {
+        }else if(currentTab == tbBookings){
+            showModalBooking(null);
+        }
+        else {
             System.out.println("Under Construction");
         }
     }
@@ -396,7 +399,18 @@ public class MainController {
                 alert.setContentText("Please select a product from the table to edit.");
                 alert.showAndWait();
             }
-        } else if (currentTab == tbSuppliers) {
+        } else if (currentTab == tbBookings) {
+            Booking selectedBooking = tvBookings.getSelectionModel().getSelectedItem();
+            if (selectedBooking != null) {
+                showModalBooking(selectedBooking);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Selection Required");
+                alert.setHeaderText(null);
+                alert.setContentText("Please select a booking from the table to edit.");
+                alert.showAndWait();
+            }
+        }else if (currentTab == tbSuppliers) {
             Supplier selectedSupplier = tvSuppliers.getSelectionModel().getSelectedItem();
             if (selectedSupplier != null) {
                 showModalSupplier(selectedSupplier);
@@ -569,9 +583,24 @@ public class MainController {
                     showAlert("Failure", "Could not delete the package. Please try again later.");
                 }
             }
-        } else {
-            System.out.println("Under Construction");
+        } else if (currentTab == tbBookings){
+            Booking selectedBooking = tvBookings.getSelectionModel().getSelectedItem();
+            if (selectedBooking == null) {
+                showAlert("Selection Required", "Please select a package to delete.");
+                return;
+            }
+
+            if (showConfirmation("Delete Confirmation", "Do you really want to delete this Booking?")) {
+                if (BookingDAO.deleteBooking(selectedBooking)) {  // Using the deletePackage method
+                    tvPackages.getItems().remove(selectedBooking);
+                    showAlert("Success", "Booking deleted successfully.");
+
+                } else {
+                    showAlert("Failure", "Could not delete the booking. Please try again later.");
+                }
+            }
         }
+        refreshTable();
     }
 // ---------------------------------------------------------------------------------------------------------Modal Display---------------------------------------------------------------------------------------------------------
 
@@ -602,6 +631,35 @@ public class MainController {
             e.printStackTrace();
         }
     }
+    private void showModalBooking(Booking booking) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("addEdit_Booking_view.fxml"));
+            Parent root = loader.load();
+
+            AddEditBookingController addEditBookingController = loader.getController();
+            addEditBookingController.setMainController(this);
+
+            if (booking == null) {
+                addEditBookingController.setModeAndData(AddEditBookingController.Mode.ADD, null);
+            } else {
+                addEditBookingController.setModeAndData(AddEditBookingController.Mode.EDIT, booking);
+            }
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle(booking == null ? "Add New Booking" : "Edit Booking");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+            refreshTable();
+            data.clear();
+            LoadData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private void showModalProduct(Product product) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("addEdit_product_view.fxml"));
@@ -615,9 +673,6 @@ public class MainController {
             stage.setTitle(product == null ? "Add New Product" : "Edit Product");
             stage.setScene(new Scene(root));
             stage.showAndWait();
-
-            // Here, you can refresh the product table data after subview closes
-            // for instance: refreshProductTable();
             refreshTable();
             dataProduct.clear();
             LoadData();
@@ -809,7 +864,6 @@ public class MainController {
 
             setSQL("Select * from agents");
         } else if (currentTab==tbBookings) {
-
             setSQL("Select * from bookings");
         } else if (currentTab==tbCustomers){
             setSQL("Select * from Customers");
