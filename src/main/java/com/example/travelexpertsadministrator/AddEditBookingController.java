@@ -111,26 +111,35 @@ public class AddEditBookingController {
         }
         Customer customer = BookingDAO.getCustomerByBooking(currentBooking);
 
-        if (customer == null || customer.getCustEmail() == null || customer.getCustEmail().isEmpty()) {
+        if (customer == null) {
             return;
         }
+
         String invoice = createInvoice(currentBooking, customer);
         Alert alert = new Alert(Alert.AlertType.INFORMATION, invoice);
         alert.setHeaderText("Generated Invoice");
-        ButtonType sendButtonType = new ButtonType("Send Invoice");
-        alert.getButtonTypes().add(sendButtonType);
 
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == sendButtonType) {
-            try {
-                sendEmail(customer.getCustEmail(), "Your Invoice", invoice);
-                showAlert("Success", "Invoice sent successfully!");
-            } catch (MessagingException e) {
-                e.printStackTrace();
-                showAlert("Error", "Failed to send email. Check the logs.");
+        if (customer.getCustEmail() != null && !customer.getCustEmail().trim().isEmpty()) {
+            ButtonType sendButtonType = new ButtonType("Send Invoice");
+            alert.getButtonTypes().add(sendButtonType);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == sendButtonType) {
+                try {
+                    sendEmail(customer.getCustEmail(), "Your Invoice", invoice);
+                    showAlert("Success", "Invoice sent successfully!");
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                    showAlert("Error", "Failed to send email. Check the logs.");
+                }
             }
+        } else {
+            showAlert("Warning", "Customer email address is invalid. Cannot send invoice.");
+            alert.showAndWait();
         }
     }
+
+
     private String createInvoice(Booking booking, Customer customer) {
         StringBuilder invoiceSB = new StringBuilder();
 
