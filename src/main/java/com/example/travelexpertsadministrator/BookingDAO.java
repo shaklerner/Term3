@@ -120,4 +120,25 @@ public class BookingDAO {
         }
         return packageIds;
     }
+
+    //---------------------------------------------Invoice method-----------------------------------------------
+    public static Customer getCustomerByBooking(Booking booking) {
+        String query = "SELECT * FROM customers WHERE CustomerId = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, booking.getCustomerId());
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Customer customer = new Customer(rs.getInt("CustomerId"),rs.getString("CustFirstName"),rs.getString("CustLastName"),rs.getString("CustAddress"),
+                        rs.getString("CustCity"),rs.getString("CustProv"),rs.getString("CustPostal"),rs.getString("CustCountry"),rs.getString("CustHomePhone"),
+                        rs.getString("CustBusPhone"),rs.getString("CustEmail"),rs.getInt("AgentId"));
+                return customer;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
 }
