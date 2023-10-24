@@ -16,6 +16,12 @@ public class AddEditCustomerController {
     private ComboBox<Integer> cbAgentId;
 
     private Customer currentCustomer;
+    public enum Mode {
+        ADD, EDIT
+    }
+
+    private Mode currentMode;
+
 
     @FXML
     public void initialize() {
@@ -23,7 +29,8 @@ public class AddEditCustomerController {
         cbAgentId.setItems(FXCollections.observableArrayList(CustomerDAO.fetchAgentIds()));
     }
 
-    public void setCustomer(Customer customer) {
+    public void setModeAndData(Mode mode, Customer customer) {
+        this.currentMode = mode;
         this.currentCustomer = customer;
         if (customer != null) {
             populateFields(customer);
@@ -47,17 +54,29 @@ public class AddEditCustomerController {
     @FXML
     private void btnAddCustomerClicked() {
         if(!validateInput()) return;
-        if (currentCustomer == null) {
-            currentCustomer = new Customer(-1, "", "", "", "", "", "", "", "", "", "", -1);  // Default empty customer
+
+        if (cbAgentId.getSelectionModel().getSelectedItem() == null) {
+            showAlert("Error", "Please select an agent.");
+            return;
         }
 
-        updateCustomerFromFields(currentCustomer);
-
-        if (CustomerDAO.insertCustomer(currentCustomer)) {
-            showAlert("Success", "Customer saved successfully.");
-            closeWindow();
-        } else {
-            showAlert("Error", "There was an error saving the customer.");
+        if (currentMode == Mode.ADD) {
+            currentCustomer = new Customer(-1, "", "", "", "", "", "", "", "", "", "", -1);  // Default empty customer
+            updateCustomerFromFields(currentCustomer);
+            if (CustomerDAO.insertCustomer(currentCustomer)) {
+                showAlert("Success", "Customer added successfully.");
+                closeWindow();
+            } else {
+                showAlert("Error", "There was an error adding the customer.");
+            }
+        } else if (currentMode == Mode.EDIT) {
+            updateCustomerFromFields(currentCustomer);
+            if (CustomerDAO.updateCustomer(currentCustomer)) {
+                showAlert("Success", "Customer updated successfully.");
+                closeWindow();
+            } else {
+                showAlert("Error", "There was an error updating the customer.");
+            }
         }
     }
 

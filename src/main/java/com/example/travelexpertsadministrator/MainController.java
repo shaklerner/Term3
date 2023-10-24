@@ -778,7 +778,12 @@ public class MainController {
             Parent root = loader.load();
             AddEditCustomerController controller = loader.getController();
 
-            controller.setCustomer(customer); // Assuming you have this method in AddEditCustomerController
+            // Set the mode and data based on whether the customer is null or not
+            if (customer == null) {
+                controller.setModeAndData(AddEditCustomerController.Mode.ADD, null);
+            } else {
+                controller.setModeAndData(AddEditCustomerController.Mode.EDIT, customer);
+            }
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
@@ -787,7 +792,6 @@ public class MainController {
             stage.showAndWait();
 
             // Refresh the customer table view after modal closes, if needed
-            // for example: loadCustomersToTable();
             refreshTable();
             dataCustomer.clear();
             LoadData(); // Load the updated data into the table view
